@@ -61,3 +61,7 @@ Route::get('/project', function () {
 Route::get('/projects', function () {
     return view('projects');
 });
+
+Route::get('/dynamic', function () {
+    return view('dynamic.dynamic');
+});
