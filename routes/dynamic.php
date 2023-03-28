@@ -63,7 +63,9 @@ use App\Http\Controllers\ContactUsLineController;
         Route::get('/email-box',[EmailBoxController::class, 'index']);
         Route::post('/email-box',[EmailBoxController::class, 'store']);
         Route::post('/emailBox-update',[EmailBoxController::class, 'update']);
-
+        
         Route::get('/consult-with-us',[ConsultWithUsController::class, 'index']);
         Route::post('/consult-with-us',[ConsultWithUsController::class, 'store']);
+        Route::post('/ConsultWithUs-update',[ConsultWithUsController::class, 'update']);
+        Route::get('/ConsultWithUs-delete',[ConsultWithUsController::class, 'delete'])->name('ConsultWithUs-delete');
     });
