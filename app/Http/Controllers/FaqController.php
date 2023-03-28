@@ -41,6 +41,8 @@ class FaqController extends Controller
         $faqs->title = $title;
         $faqs->lines = $lines;
         $faqs->save();
+
+        return redirect('dashboard/dynamic-edit/faqs');
     }
 
     function update()
@@ -78,6 +80,8 @@ class FaqController extends Controller
         $faqs->lines = $lines;
  
         $faqs->save();
+
+        return redirect('dashboard/dynamic-edit/faqs');
     }
 
     function hasRecord()

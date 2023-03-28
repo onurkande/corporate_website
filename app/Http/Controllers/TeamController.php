@@ -28,7 +28,7 @@ class TeamController extends Controller
         $task=request()->input('task');
 
         $image_path = $image->storeAs('public/images/team', request()->file('image')->getClientOriginalName());
-
+        // dd($image_path);
         if($image != null or $name != null or $task != null)
         {
             $employee=[
@@ -56,6 +56,9 @@ class TeamController extends Controller
         $team->employee = $employee;
  
         $team->save();
+
+        //session()->flash('ogrencieklendi', 'Ögrenci verileri başarıyla eklendi!');
+        return redirect('dashboard/dynamic-edit/team');
     }
 
     function update()
@@ -100,6 +103,7 @@ class TeamController extends Controller
         $team->employee = $employee;
  
         $team->save();
+        return redirect('dashboard/dynamic-edit/team');
     }
 
     function hasRecord()

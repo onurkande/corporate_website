@@ -1,7 +1,7 @@
 @extends('layouts.dynamic')
-@section('title','FAQS')
+@section('title','HOME PAGE')
 @section('content')
-    <div class="py-12">
+    {{-- <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
                 @if($record != null)
@@ -60,9 +60,11 @@
                 @endif
             </div>
         </div>
-    </div>
-
-    <script>
+    </div> --}}
+    <h1>
+    HOŞGELDİN ADMİN
+    </h1>
+    {{-- <script>
         function addLines()
         {
             const moreLines = document.getElementById('more-lines');
@@ -77,5 +79,5 @@
             const lastLines = linesSection.querySelector("div:last-child");
             lastLines.parentElement.removeChild(lastLines);
         }
-    </script>
+    </script> --}}
 @endsection

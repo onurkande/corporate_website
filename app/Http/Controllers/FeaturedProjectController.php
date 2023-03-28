@@ -28,7 +28,7 @@ class FeaturedProjectController extends Controller
         $content = request()->input('content');
         $button = request()->input('button');
 
-        $image_path = $image->storeAs('public/images/featuredProject', request()->file('image')->getClientOriginalName());
+        $image_path = $image->storeAs('public/images/team', request()->file('image')->getClientOriginalName());
 
         if($image != null or $header != null or $content != null)
         {
@@ -53,6 +53,8 @@ class FeaturedProjectController extends Controller
         $FeaturedProject->rows = $rows;
         $FeaturedProject->button = $button;
         $FeaturedProject->save();
+
+        return redirect('dashboard/dynamic-edit/featured-project');
     }
 
     function update()
@@ -95,6 +97,8 @@ class FeaturedProjectController extends Controller
         $FeaturedProject->button = $button;
         
         $FeaturedProject->save();
+
+        return redirect('dashboard/dynamic-edit/featured-project');
     }
 
     public static function hasRecord()

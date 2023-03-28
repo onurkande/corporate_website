@@ -1,6 +1,5 @@
 <?php
     use App\Http\Controllers\FeaturedProjectController;
-    use App\Http\Controllers\ProfileController;
     use Illuminate\Support\Facades\Route;
     use App\Http\Controllers\CounterController;
     use App\Http\Controllers\TeamController;
@@ -8,10 +7,15 @@
     use App\Http\Controllers\AboutController;
     use App\Http\Controllers\AboutRowController;
     use App\Http\Controllers\BestServicesController;
-    use App\Http\Controllers\ContactUsLineController;
+use App\Http\Controllers\ConsultWithUsController;
+use App\Http\Controllers\ContactUsLineController;
     use App\Http\Controllers\ContactUsRowController;
+    use App\Http\Controllers\DynamicIndexController;
+    use App\Http\Controllers\EmailBoxController;
 
-    Route::prefix('/dashboard/dynamic-edit')->group(function () {
+    Route::prefix('dashboard/dynamic-edit')->group(function () {
+
+        Route::get('/',[DynamicIndexController::class, 'index']);
 
         Route::get('/faqs',[FaqController::class, 'index']);
         Route::post('/faqs',[FaqController::class, 'store']);
@@ -56,4 +60,10 @@
         Route::post('/bestServices-update',[BestServicesController::class, 'update']);
         Route::get('/bestServices-delete',[BestServicesController::class, 'delete'])->name('bestServices-delete');
         
+        Route::get('/email-box',[EmailBoxController::class, 'index']);
+        Route::post('/email-box',[EmailBoxController::class, 'store']);
+        Route::post('/emailBox-update',[EmailBoxController::class, 'update']);
+
+        Route::get('/consult-with-us',[ConsultWithUsController::class, 'index']);
+        Route::post('/consult-with-us',[ConsultWithUsController::class, 'store']);
     });

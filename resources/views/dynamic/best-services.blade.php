@@ -1,10 +1,6 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Best Services
-        </h2>
-    </x-slot>
-
+@extends('layouts.dynamic')
+@section('title','BEST SERVİCES')
+@section('content')
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
@@ -29,8 +25,8 @@
                             <br>
                             <br>
                             <div >
-                                <input type="text" name="header[]" value="{{$row['header']}}">
-                                <img style="width:250px" src="/storage/images/{{$row['image']}}">
+                                <input type="text" name="header[]" value="{{$row['header']}}"><br>
+                                <img style="width:250px" src="{{ asset('images/' . $row['image']) }}">
                                 <input type="hidden" name="oldImage[]" value="{{$row['image']}}">
                                 <input type="file" name="image[]">
                                 <a href="{{route('bestServices-delete', ['header'=>$row['header']])}}"> sil </a>
@@ -200,4 +196,4 @@
         cursor: pointer;
         }
     </style>
-</x-app-layout>
+@endsection

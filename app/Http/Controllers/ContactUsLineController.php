@@ -28,6 +28,8 @@ class ContactUsLineController extends Controller
         $contactusline->title = $title;
         $contactusline->number = $number;
         $contactusline->save();
+
+        return redirect('dashboard/dynamic-edit/contact-us-line');
     }
 
     function update()
@@ -40,6 +42,8 @@ class ContactUsLineController extends Controller
         $contactusline->title = $title;
         $contactusline->number = $number;
         $contactusline->save();
+
+        return redirect('dashboard/dynamic-edit/contact-us-line');
     }
 
     public static function hasRecord()

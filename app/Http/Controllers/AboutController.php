@@ -27,7 +27,7 @@ class AboutController extends Controller
         $button=request()->input('button');
         $image=request()->file('image');
 
-        $image_path = $image->storeAs('public/images/about', request()->file('image')->getClientOriginalName());
+        $image_path = $image->storeAs('public/images/team', request()->file('image')->getClientOriginalName());
 
         $abouts=new About;
         $abouts->title=$title;
@@ -36,6 +36,8 @@ class AboutController extends Controller
         $abouts->image = 'about/'.request()->file('image')->getClientOriginalName();
 
         $abouts->save();
+
+        return redirect('dashboard/dynamic-edit/about');
     }
 
     function update()
@@ -56,6 +58,8 @@ class AboutController extends Controller
         $abouts->image = 'about/'.request()->file('image')->getClientOriginalName();
  
         $abouts->save();
+
+        return redirect('dashboard/dynamic-edit/about');
     }
 
     function hasRecord()

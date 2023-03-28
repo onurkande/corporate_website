@@ -27,7 +27,7 @@
                                     <div class="image-box-item">
                                         <div class="inner">
                                             <div class="thumb data-effect-item">
-                                                <img src="/storage/images/{{$row['image']}}">
+                                                <img src="/images/{{$row['image']}}"> 
                                                 <div class="overlay-effect bg-color-accent"></div>
                                             </div>
                                             <div class="text-wrap">

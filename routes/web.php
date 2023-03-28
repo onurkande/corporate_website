@@ -38,7 +38,7 @@ Route::get('/contact', function () {
     return view('contact');
 });
 
-Route::get('/blog', function () {
+Route::get('/blog-single', function () {
     return view('blog-single');
 });
 
@@ -63,5 +63,13 @@ Route::get('/projects', function () {
 });
 
 Route::get('/dynamic', function () {
-    return view('dynamic.dynamic');
+    return view('layouts.dynamic');
+});
+
+Route::get('/deneme', function () {
+    return view('dynamic.deneme');
+});
+
+Route::get('test',function (){
+    return public_path('');
 });

@@ -54,6 +54,8 @@ class ContactUsRowController extends Controller
         $contactusrow->rows = $rows;
 
         $contactusrow->save();
+
+        return redirect('dashboard/dynamic-edit/contact-us-row');
     }
 
     function update()
@@ -94,6 +96,8 @@ class ContactUsRowController extends Controller
         $contactusrow->rows = $rows;
  
         $contactusrow->save();
+
+        return redirect('dashboard/dynamic-edit/contact-us-row');
     }
 
     public static function hasRecord()

@@ -26,7 +26,8 @@
                                     <div class="project-item">
                                         <div class="inner">
                                             <div class="thumb data-effect-item has-effect-icon w40 offset-v-43 offset-h-46">
-                                                <img src="/storage/images/{{$row['image']}}" alt="Image">         
+                                                {{-- <img src="/storage/images/{{$row['image']}}" alt="Image">  --}}
+                                                <img src="/images/{{$row['image']}}" alt="Image">        
                                                 <div class="text-wrap text-center">
                                                     <h5 class="heading"><a href="#">{{$row['header']}}</a></h5>
                                                     <div class="elm-meta">

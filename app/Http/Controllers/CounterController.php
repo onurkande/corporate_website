@@ -42,6 +42,8 @@ class CounterController extends Controller
  
         $counter->save();
 
+        return redirect('dashboard/dynamic-edit/counter');
+
     }
 
     function update()
@@ -75,6 +77,8 @@ class CounterController extends Controller
         $counter->columns = $column;
  
         $counter->save();
+
+        return redirect('dashboard/dynamic-edit/counter');
     }
 
     function hasRecord()

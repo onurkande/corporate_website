@@ -1,10 +1,6 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            About
-        </h2>
-    </x-slot>
-
+@extends('layouts.dynamic')
+@section('title','ABOUT')
+@section('content')
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
@@ -22,7 +18,7 @@
                         <input type="text" name="button" value="{{$record->button}}">
                         <br>
                         <label>image</label>
-                        <img style="width:250px" src="/storage/images/{{$record->image}}">
+                        <img style="width:250px"  src="{{ asset('images/' . $record->image) }}">
                         <input type="file" name="image">
                         <br>
                         <input type="submit" value="güncelle">
@@ -49,4 +45,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+@endsection

@@ -41,6 +41,8 @@ class AboutRowController extends Controller
         $aboutrows->content=$content;
         $aboutrows->rows=$rows;
         $aboutrows->save();
+
+        return redirect('dashboard/dynamic-edit/about-row');
     }
 
     function update()
@@ -80,6 +82,8 @@ class AboutRowController extends Controller
         $aboutrows->rows = $rows;
  
         $aboutrows->save();
+
+        return redirect('dashboard/dynamic-edit/about-row');
     }
 
     function hasRecord()

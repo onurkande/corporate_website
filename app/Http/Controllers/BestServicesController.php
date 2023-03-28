@@ -28,7 +28,7 @@ class BestServicesController extends Controller
         $image=request()->file('image');
         $button=request()->input('button');
 
-        $image_path = $image->storeAs('public/images/bestServices', request()->file('image')->getClientOriginalName());
+        $image_path = $image->storeAs('public/images/team', request()->file('image')->getClientOriginalName());
 
         if($header != null or $image != null)
         {
@@ -56,6 +56,8 @@ class BestServicesController extends Controller
         $bestservices->button=$button;
 
         $bestservices->save();
+
+        return redirect('dashboard/dynamic-edit/best-services');
 
 
     }
@@ -127,6 +129,8 @@ class BestServicesController extends Controller
         $bestservices->button=$button;
  
         $bestservices->save();
+
+        return redirect('dashboard/dynamic-edit/best-services');
     }
 
     public static function hasRecord()

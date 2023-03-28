@@ -26,7 +26,8 @@
                                     <div class="team-item">
                                         <div class="inner">
                                             <div class="thumb data-effect-item">
-                                                <img src="/storage/images/{{$employee['image']}}" alt="Image">
+                                                {{-- <img src="/storage/images/{{$employee['image']}}" alt="Image"> --}}
+                                                <img src="/images/{{$employee['image']}}" alt="Image"> 
                                                 <ul class="socials clearfix">
                                                     <li class="facebook"><a href="#"><i class="autora-icon-facebook"></i></a></li>
                                                     <li class="twitter"><a href="#"><i class="autora-icon-twitter"></i></a></li>

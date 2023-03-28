@@ -1,9 +1,6 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Featured Project
-        </h2>
-    </x-slot>
+@extends('layouts.dynamic')
+@section('title','FEATURED PROJECT')
+@section('content')
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -31,7 +28,7 @@
                             <div >
                                 <br>
                                 <br>
-                                <img style="width:250px" src="/storage/images/{{$row['image']}}">
+                                <img style="width:250px" src="{{ asset('images/' . $row['image']) }}">
                                 <br>
                                 <input type="hidden" name="oldImage[]" value="{{$row['image']}}">
                                 <input type="file" name="image[]">
@@ -113,4 +110,4 @@
             lastRows.parentElement.removeChild(lastRows);
         }
     </script>
-</x-app-layout>
+@endsection
