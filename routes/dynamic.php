@@ -12,6 +12,7 @@ use App\Http\Controllers\ContactUsLineController;
     use App\Http\Controllers\ContactUsRowController;
     use App\Http\Controllers\DynamicIndexController;
     use App\Http\Controllers\EmailBoxController;
+use App\Http\Controllers\InfoBoxController;
 
     Route::prefix('dashboard/dynamic-edit')->group(function () {
 
@@ -68,4 +69,6 @@ use App\Http\Controllers\ContactUsLineController;
         Route::post('/consult-with-us',[ConsultWithUsController::class, 'store']);
         Route::post('/ConsultWithUs-update',[ConsultWithUsController::class, 'update']);
         Route::get('/ConsultWithUs-delete',[ConsultWithUsController::class, 'delete'])->name('ConsultWithUs-delete');
+
+        Route::get('/info-box',[InfoBoxController::class, 'index']);
     });

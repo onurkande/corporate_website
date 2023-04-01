@@ -95,6 +95,8 @@
                   <li><a href="/dashboard/dynamic-edit/email-box"><i class="fa fa-bar-chart-o"></i>EMAİL BOX</a></li>
 
                   <li><a href="/dashboard/dynamic-edit/consult-with-us"><i class="fa fa-bar-chart-o"></i>CONSULT WİTH US</a></li>
+
+                  <li><a href="/dashboard/dynamic-edit/info-box"><i class="fa fa-bar-chart-o"></i>INFO BOX</a></li>
                 </ul>
               </div>
 

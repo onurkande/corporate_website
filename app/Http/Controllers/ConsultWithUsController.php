@@ -13,6 +13,12 @@ class ConsultWithUsController extends Controller
         return view('dynamic/consult-with-us',['record'=>$record]);
     }
 
+    function view()
+    {
+        $record = $this->hasRecord();
+        return $record;
+    }
+
     function store()
     {
         $title = request()->input('title');
