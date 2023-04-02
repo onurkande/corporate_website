@@ -1,0 +1,9 @@
+java ide  kur
+proje kur
+sınıf kur
+paketleri kur
+konsolları aç
+ekrana yazdır
+java chapter 02 8 20 21 22 25 ornekler
+ 
+java curser

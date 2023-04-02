@@ -7,12 +7,13 @@
     use App\Http\Controllers\AboutController;
     use App\Http\Controllers\AboutRowController;
     use App\Http\Controllers\BestServicesController;
-use App\Http\Controllers\ConsultWithUsController;
-use App\Http\Controllers\ContactUsLineController;
+    use App\Http\Controllers\ConsultWithUsController;
+    use App\Http\Controllers\ContactUsLineController;
     use App\Http\Controllers\ContactUsRowController;
     use App\Http\Controllers\DynamicIndexController;
     use App\Http\Controllers\EmailBoxController;
-use App\Http\Controllers\InfoBoxController;
+    use App\Http\Controllers\InfoBoxController;
+    use App\Http\Controllers\OurServicesController;
 
     Route::prefix('dashboard/dynamic-edit')->group(function () {
 
@@ -71,4 +72,9 @@ use App\Http\Controllers\InfoBoxController;
         Route::get('/ConsultWithUs-delete',[ConsultWithUsController::class, 'delete'])->name('ConsultWithUs-delete');
 
         Route::get('/info-box',[InfoBoxController::class, 'index']);
+        Route::post('/info-box',[InfoBoxController::class, 'store']);
+        Route::post('/InfoBox-update',[InfoBoxController::class, 'update']);
+        Route::get('/InfoBoxDownloads/{file}', [InfoBoxController::class, 'downloadFile'])->name('download');
+
+        Route::get('/our-services',[OurServicesController::class, 'index']);
     });
