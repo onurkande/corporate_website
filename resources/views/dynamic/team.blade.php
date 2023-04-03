@@ -32,7 +32,6 @@
                                 <input type="text" name="name[]" value="{{$single['name']}}">
                                 <input type="text" name="task[]" value="{{$single['task']}}">
                                 <a href="{{route('team-delete', ['name'=>$single['name']])}}"> sil </a>
-                                
                             </div>
                             <br>
                             @endforeach

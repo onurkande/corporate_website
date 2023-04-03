@@ -48,7 +48,7 @@ class InfoBoxController extends Controller
         $file=request()->file('file');
         $oldFile = request()->input('oldfile');
 
-        $allRows = [$file];
+        // $allRows = [$file];
         if($file != null)
         {
         $rowsCount = count($file);
@@ -56,15 +56,11 @@ class InfoBoxController extends Controller
         $rows = [];
         while($index < $rowsCount){
             //dd($oldFile);
-            if(isset($oldFile[$index])){
-                $oldFileValue = $oldFile[$index];
-                $rows[$oldFileValue [$index]] = [
-                    "file" => isset($file[$index]) ? request()->file('file')[$index]->getClientOriginalName() : $oldFile[$index]
-                ];
-                $index++;
-            } else {
-                $oldFileValue = null;
-            }
+            $column[$title[$index]] = [
+                "title" => $title[$index],
+                "number" => $number[$index]
+            ];
+            $index++;
             
         }
         $rows=json_encode($rows,JSON_UNESCAPED_UNICODE);

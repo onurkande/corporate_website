@@ -6,8 +6,10 @@ use Livewire\Component;
 
 class OurServices extends Component
 {
+    public $record;
     public function render()
     {
-        return view('livewire.our-services');
+        $this->record=app('App\Http\Controllers\OurServicesController')->view();
+        return view('livewire.our-services',['record'=>$this->record]);
     }
 }
