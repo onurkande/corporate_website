@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ServiceDetailController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -50,9 +51,11 @@ Route::get('/services', function () {
     return view('services');
 });
 
-Route::get('/service', function () {
-    return view('service');
-});
+Route::get('/service',[ServiceDetailController::class, 'view']);
+
+// Route::get('/service', function () {
+//     return view('service');
+// });
 
 Route::get('/project', function () {
     return view('project');

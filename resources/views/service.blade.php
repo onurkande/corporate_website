@@ -47,11 +47,16 @@
                             <!-- Info -->
                                 @livewire('info')
                             <!-- Info -->
-                            <div class="themesflat-spacer clearfix" data-desktop="39" data-mobile="39" data-smobile="39"></div>     
-                            <div class="flat-content-wrap style-2 clearfix">
-                                <h5 class="title">SERVICE CONSULTANT</h5>
-                                <p>Through our Design-Build service, we provides a single source of responsibility to the client. We work to develop and understand project expectations and then manage those needs with a customized, qualified design team. Innovation should happen throughout a project. To do that, we focus our efforts on each step of every phase to make the entire process smooth and straightforward. Our proactive, collaborative approach is what uncovers unique ideas and opportunities for improvement before the next phase begins.</p>
-                            </div>
+                            <div class="themesflat-spacer clearfix" data-desktop="39" data-mobile="39" data-smobile="39"></div>  
+
+                            @if($record)
+                                <div class="flat-content-wrap style-2 clearfix">
+                                    <h5 class="title">{{$record->title}}</h5>
+                                    <p>{{$record->content}}</p>
+                                </div>
+                            @else
+                                
+                            @endif 
                             <div class="themesflat-spacer clearfix" data-desktop="37" data-mobile="35" data-smobile="35"></div>     
                             <div class="flat-content-wrap style-2 clearfix">
                                 <!-- Our Services -->

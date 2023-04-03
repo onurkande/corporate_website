@@ -15,6 +15,7 @@
     use App\Http\Controllers\InfoBoxController;
     use App\Http\Controllers\OurServicesController;
     use App\Http\Controllers\InfoController;
+    use App\Http\Controllers\ServiceDetailController;
 
     Route::prefix('dashboard/dynamic-edit')->group(function () {
 
@@ -85,4 +86,8 @@
         Route::get('/info',[InfoController::class, 'index']);
         Route::post('/info',[InfoController::class, 'store']);
         Route::post('/info-update',[InfoController::class, 'update']);
+        
+        Route::get('/service-detail',[ServiceDetailController::class, 'index']);
+        Route::post('/service-detail',[ServiceDetailController::class, 'store']);
+        Route::post('/ServiceDetail-update',[ServiceDetailController::class, 'update']);
     });
