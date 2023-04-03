@@ -1,7 +1,7 @@
 @extends('layouts.dynamic')
-@section('title','TEAM')
+@section('title','INFO BOX')
 @section('content')
-    @if ($record)
+    @if($record)
         <form method="post" action="InfoBox-update" enctype="multipart/form-data">
             @csrf
             <label>title</label>
@@ -12,24 +12,23 @@
                     $rows=json_decode($record->rows, TRUE);
                 @endphp
 
-                {{-- @foreach($rows as $row)
-                    <div>
-                        <p>{{asset('/InfoBoxDownloads/'. $row['file'])}}</p>
-                        <input type="hidden" name="oldFile[]" value="{{$row['file']}}">
-                        <label>file</label>
-                        <input type="file" name="file[]"><br>
-                    </div>
-                    <br>
-                @endforeach --}}
-                @foreach($rows as $row)
-                    <div>
-                        <p>{{asset('/InfoBoxDownloads/'. $row)}}</p>
-                        <input type="hidden" name="oldFile[]" value="{{$row}}">
-                        <label>file</label>
-                        <input type="file" name="file[]"><br>
-                    </div>
-                    <br>
-                @endforeach
+                
+                @if(is_array($rows))
+                    @foreach($rows as $row)
+                        <div>
+                            <p>{{asset('/InfoBoxDownloads/'. $row)}}</p>
+                            <input type="hidden" name="oldFile[]" value="{{$row}}">
+                            <label>file</label>
+                            <input type="file" name="file[]"><br>
+
+                            {{-- <p>{{asset('/InfoBoxDownloads/'. $row['file'])}}</p>
+                            <input type="hidden" name="oldfile[]" value="{{$row['file']}}">
+                            <input type="file" name="file[]"> --}}
+                        </div>
+                        <br>
+                    @endforeach                  
+                @endif
+                
                 <section id="more-rows">
                 </section>
             @else

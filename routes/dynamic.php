@@ -14,6 +14,7 @@
     use App\Http\Controllers\EmailBoxController;
     use App\Http\Controllers\InfoBoxController;
     use App\Http\Controllers\OurServicesController;
+    use App\Http\Controllers\InfoController;
 
     Route::prefix('dashboard/dynamic-edit')->group(function () {
 
@@ -80,4 +81,8 @@
         Route::post('/our-services',[OurServicesController::class, 'store']);
         Route::post('/OurServices-update',[OurServicesController::class, 'update']);
         Route::get('/OurServices-delete',[OurServicesController::class, 'delete'])->name('OurServices-delete');
+
+        Route::get('/info',[InfoController::class, 'index']);
+        Route::post('/info',[InfoController::class, 'store']);
+        Route::post('/info-update',[InfoController::class, 'update']);
     });

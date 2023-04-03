@@ -99,6 +99,8 @@
                   <li><a href="/dashboard/dynamic-edit/info-box"><i class="fa fa-bar-chart-o"></i>INFO BOX</a></li>
 
                   <li><a href="/dashboard/dynamic-edit/our-services"><i class="fa fa-bar-chart-o"></i>OUR SERVİCES</a></li>
+
+                  <li><a href="/dashboard/dynamic-edit/info"><i class="fa fa-bar-chart-o"></i>INFO</a></li>
                 </ul>
               </div>
 
