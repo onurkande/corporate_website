@@ -1,0 +1,38 @@
+Merhaba ben laravel ile websitesi kodluyorum.Form'da update yaparken `Trying to access array offset on value of type null` böyle bir hatayla karşılaştım.
+Controllerdaki update fonksiyonum :  `function update()
+    {
+        $title=request()->input('title');
+        $file=request()->file('file');
+        $oldFile = request()->input('oldfile');
+
+        $allRows = [$file];
+        if($file != null)
+        {
+        $rowsCount = count($file);
+        $index = 0;
+        $rows = [];
+        while($index < $rowsCount){
+            $rows[$oldFile[$index]] = [
+                "file" => isset($file[$index]) ? request()->file('file')[$index]->getClientOriginalName() : $oldFile[$index]
+            ];
+            $index++;
+        }
+        $rows=json_encode($rows,JSON_UNESCAPED_UNICODE);
+
+        }
+        else
+        {
+            $rows = null;
+        }
+        
+
+
+        $infobox = new InfoBox;
+        $infobox = $infobox::find(1);
+
+        $infobox->title = $title;
+        $infobox->rows = $rows;
+ 
+        $infobox->save();
+        return redirect('dashboard/dynamic-edit/info-box');
+    }`

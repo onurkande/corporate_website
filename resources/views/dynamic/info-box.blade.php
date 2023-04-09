@@ -12,18 +12,17 @@
                     $rows=json_decode($record->rows, TRUE);
                 @endphp
 
-                
                 @if(is_array($rows))
                     @foreach($rows as $row)
+                    
                         <div>
-                            <p>{{asset('/InfoBoxDownloads/'. $row)}}</p>
-                            <input type="hidden" name="oldFile[]" value="{{$row}}">
+                        {{-- {{dd($row)}} --}}
+                            <p>{{asset('/images/InfoBoxDownloads/'. $row['file'])}}</p>
+                            <input type="hidden" name="oldFile[]" value="{{$row['file']}}">
                             <label>file</label>
-                            <input type="file" name="file[]"><br>
-
-                            {{-- <p>{{asset('/InfoBoxDownloads/'. $row['file'])}}</p>
-                            <input type="hidden" name="oldfile[]" value="{{$row['file']}}">
-                            <input type="file" name="file[]"> --}}
+                            <input type="file" name="file[]">
+                            <a href="/dashboard/dynamic-edit/InfoBox-delete/{{$row['file']}}"> sil </a>
+                            <br>
                         </div>
                         <br>
                     @endforeach                  

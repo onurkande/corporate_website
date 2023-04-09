@@ -32,7 +32,7 @@
             <div class="wrap-inner clearfix">
                 <div id="site-logo" class="clearfix">
                     <div id="site-log-inner">
-                        <a href="home.html" rel="home" class="main-logo">
+                        <a href="/" rel="home" class="main-logo">
                             <img src="assets/img/logo-small.png" alt="Autora" width="186" height="39" data-retina="assets/img/logo-small@2x.png" data-width="186" data-height="39">
                         </a>
                     </div>
@@ -46,55 +46,30 @@
                     <ul id="menu-primary-menu" class="menu">
                         <li class="menu-item menu-item-has-children current-menu-item">
                             <a href="/">HOME</a>
-                            {{-- <ul class="sub-menu">
-                                <li class="menu-item current-item"><a href="home.html">HOME 1</a></li>
-                                <li class="menu-item"><a href="home-2.html">HOME 2</a></li>
-                            </ul> --}}
                         </li>
                         <li class="menu-item menu-item-has-children">
                             <a href="about">ABOUT US </a>
-                            {{-- <ul class="sub-menu">
-                                <li class="menu-item"><a href="about">ABOUT US</a></li>
-                                <li class="menu-item"><a href="page-about-detail.html">ABOUT DETAIL</a></li>
-                                <li class="menu-item"><a href="page-about-team.html">ABOUT TEAM</a></li>
-                                <li class="menu-item"><a href="page-about-careers.html">ABOUT CAREERS</a></li>
-                            </ul> --}}
                         </li>
                         <li class="menu-item menu-item-has-children">
                             <a href="services">SERVICES</a>
                             <ul class="sub-menu">
-                                {{-- <li class="menu-item"><a href="page-services.html">SERVICES</a></li> --}}
                                 <li class="menu-item"><a href="service">SERVICES DETAIL</a></li>
                             </ul>
                         </li>
                         <li class="menu-item menu-item-has-children">
                             <a href="projects">PROJECTS</a>
                             <ul class="sub-menu">
-                                {{-- <li class="menu-item"><a href="page-projects.html">PROJECTS</a></li>
-                                <li class="menu-item"><a href="page-projects-full.html">PROJECTS FULL WIDTH</a></li> --}}
                                 <li class="menu-item"><a href="project">PROJECTS DETAIL</a></li>
                             </ul>
                         </li>
-                        {{-- <li class="menu-item menu-item-has-children" >
-                            <a href="page-testimonial.html">PAGE</a>
-                            <ul class="sub-menu">
-                                <li class="menu-item"><a href="page-testimonial.html">PAGE TESTIMONIAL</a></li>
-                                <li class="menu-item"><a href="page-pricing.html">PAGE PRICING</a></li>
-                            </ul>
-                        </li> --}}
                         <li class="menu-item menu-item-has-children">
                             <a href="blogs">BLOG</a>
                             <ul class="sub-menu right-sub-menu">
-                                {{-- <li class="menu-item"><a href="page-blog.html">BLOG</a></li> --}}
                                 <li class="menu-item"><a href="blog-single">BLOG SINGLE</a></li>
                             </ul>
                         </li>
                         <li class="menu-item menu-item-has-children">
                             <a href="contact">CONTACT</a>
-                            {{-- <ul class="sub-menu right-sub-menu">
-                                <li class="menu-item"><a href="page-contact.html">CONTACT 1</a></li>
-                                <li class="menu-item"><a href="page-contact-2.html">CONTACT 2</a></li>
-                            </ul> --}}
                         </li>
                     </ul>
                 </nav><!-- /#main-nav -->

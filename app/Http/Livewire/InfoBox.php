@@ -6,8 +6,10 @@ use Livewire\Component;
 
 class InfoBox extends Component
 {
+    public $record;
     public function render()
     {
-        return view('livewire.info-box');
+        $this->record=app('App\Http\Controllers\InfoBoxController')->view();
+        return view('livewire.info-box',['record'=>$this->record]);
     }
 }

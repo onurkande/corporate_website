@@ -76,13 +76,14 @@
         Route::get('/info-box',[InfoBoxController::class, 'index']);
         Route::post('/info-box',[InfoBoxController::class, 'store']);
         Route::post('/InfoBox-update',[InfoBoxController::class, 'update']);
-        Route::get('/InfoBoxDownloads/{file}', [InfoBoxController::class, 'downloadFile'])->name('download');
+        // Route::get('/InfoBox-delete',[InfoBoxController::class, 'delete'])->name('InfoBox-delete');
+        Route::get('InfoBox-delete/infoBox/{file}',[InfoBoxController::class,'deleteFile']);
         
         Route::get('/our-services',[OurServicesController::class, 'index']);
         Route::post('/our-services',[OurServicesController::class, 'store']);
         Route::post('/OurServices-update',[OurServicesController::class, 'update']);
         Route::get('/OurServices-delete',[OurServicesController::class, 'delete'])->name('OurServices-delete');
-
+        
         Route::get('/info',[InfoController::class, 'index']);
         Route::post('/info',[InfoController::class, 'store']);
         Route::post('/info-update',[InfoController::class, 'update']);
@@ -91,3 +92,5 @@
         Route::post('/service-detail',[ServiceDetailController::class, 'store']);
         Route::post('/ServiceDetail-update',[ServiceDetailController::class, 'update']);
     });
+
+    Route::get('/images/InfoBoxDownloads/{file}', [InfoBoxController::class, 'downloadFile'])->name('download');
