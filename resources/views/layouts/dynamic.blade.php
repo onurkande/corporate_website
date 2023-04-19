@@ -103,6 +103,8 @@
                   <li><a href="/dashboard/dynamic-edit/info"><i class="fa fa-bar-chart-o"></i>INFO</a></li>
 
                   <li><a href="/dashboard/dynamic-edit/service-detail"><i class="fa fa-bar-chart-o"></i>SERVİCE DETAİL</a></li>
+
+                  <li><a href="/dashboard/dynamic-edit/footer"><i class="fa fa-bar-chart-o"></i>FOOTER</a></li>
                 </ul>
               </div>
 

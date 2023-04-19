@@ -1,5 +1,6 @@
 <?php
     use App\Http\Controllers\FeaturedProjectController;
+    use App\Http\Controllers\FooterController;
     use Illuminate\Support\Facades\Route;
     use App\Http\Controllers\CounterController;
     use App\Http\Controllers\TeamController;
@@ -91,6 +92,11 @@
         Route::get('/service-detail',[ServiceDetailController::class, 'index']);
         Route::post('/service-detail',[ServiceDetailController::class, 'store']);
         Route::post('/ServiceDetail-update',[ServiceDetailController::class, 'update']);
+        
+        Route::get('/footer',[FooterController::class, 'index']);
+        Route::post('/footer',[FooterController::class, 'infostore']);
+        Route::post('/InfoRows-update',[FooterController::class, 'infoupdate']);
+        Route::get('/inforows-delete',[FooterController::class, 'infodelete'])->name('inforows-delete');
     });
 
     Route::get('/images/InfoBoxDownloads/{file}', [InfoBoxController::class, 'downloadFile'])->name('download');
