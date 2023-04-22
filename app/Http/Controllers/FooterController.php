@@ -10,7 +10,8 @@ class FooterController extends Controller
     function index()
     {
         $infoRecord = $this->infohasRecord();
-        return view('dynamic.footer',['infoRecord'=>$infoRecord]);
+        $tagsRecord = $this->taghasRecord();
+        return view('dynamic.footer',['infoRecord'=>$infoRecord,'tagsRecord'=>$tagsRecord]);
     }
 
     function infostore()
@@ -90,4 +91,61 @@ class FooterController extends Controller
         $Footer = Footer::whereNotNull('inforows')->whereNotNull('title1')->first();
         return $Footer ?? null;
     }
+    
+
+    function tagstore()
+    {
+        $title2 = request()->input('title2');
+        $tag = request()->input('tag');
+        $tagsrows=[
+            "tag" => $tag
+        ];
+        $tagsrows = [$tagsrows];
+        $tagsrows=json_encode($tagsrows,JSON_UNESCAPED_UNICODE);
+
+        //$Footer = new Footer;
+        //$Footer = Footer::whereNull('tagsrows')->whereNull('title2')->first();
+        $Footer = Footer::whereNull('tagsrows')->whereNull('title2')->get()->first();
+        $Footer->tagsrows = $tagsrows;
+        $Footer->title2 = $title2;
+        $Footer->save();
+
+        return redirect('dashboard/dynamic-edit/footer');
+    }
+    
+    function taghasRecord()
+    {
+        $Footer = new Footer;
+        if(Footer::whereNotNull('title2') && $Footer->tagrows == null)
+        {
+            dd('deneme');
+            $Footer = Footer::whereNotNull('title2')->first();
+        }
+        elseif(Footer::whereNotNull('title2') && Footer::whereNotNull('tagrows'))
+        {
+            $Footer = Footer::whereNotNull('tagsrows')->whereNotNull('title2')->first();
+            return $Footer ?? null;
+        }
+    }
+
+    // function taghasRecord()
+    // {
+    //     $Footer = Footer::whereNotNull('tagsrows')->whereNotNull('title2')->first();
+    //     return $Footer ?? null;
+    // }
+
+    // function taghasRecord()
+    // {
+    //     $Footer = new Footer;
+    //     if(Footer::whereNotNull('title2') && Footer::whereNull('tagsrows'))
+    //     {
+    //         dd('deneme');
+    //         $Footer = Footer::whereNotNull('title2')->first();
+    //     }
+    //     elseif(Footer::whereNotNull('title2') && Footer::whereNotNull('tagrows'))
+    //     {
+    //         $Footer = Footer::whereNotNull('tagsrows')->whereNotNull('title2')->first();
+    //         return $Footer ?? null;
+    //     }
+    // }
 }

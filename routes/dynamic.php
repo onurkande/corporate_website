@@ -97,6 +97,8 @@
         Route::post('/footer',[FooterController::class, 'infostore']);
         Route::post('/InfoRows-update',[FooterController::class, 'infoupdate']);
         Route::get('/inforows-delete',[FooterController::class, 'infodelete'])->name('inforows-delete');
+
+        Route::post('/footer',[FooterController::class, 'tagstore']);
     });
 
     Route::get('/images/InfoBoxDownloads/{file}', [InfoBoxController::class, 'downloadFile'])->name('download');
