@@ -11,9 +11,12 @@ class FooterController extends Controller
     {
         $infoRecord = $this->infohasRecord();
         $tagsRecord = $this->taghasRecord();
-        return view('dynamic.footer',['infoRecord'=>$infoRecord,'tagsRecord'=>$tagsRecord]);
+        $imageRecord = $this->imagehasRecord();
+        return view('dynamic.footer',['infoRecord'=>$infoRecord,'tagsRecord'=>$tagsRecord,'imageRecord'=>$imageRecord]);
     }
 
+
+    // ====INFO====
     function infostore()
     {
         $info = request()->input('info');
@@ -24,7 +27,7 @@ class FooterController extends Controller
         $inforows = [$inforows];
         $inforows=json_encode($inforows,JSON_UNESCAPED_UNICODE);
 
-        $Footer = new Footer;
+        $Footer = Footer::whereNull('inforows')->whereNull('title1')->get()->first();
         $Footer->inforows = $inforows;
         $Footer->title1 = $title1;
         $Footer->save();
@@ -55,7 +58,6 @@ class FooterController extends Controller
             $inforows = null;
         }
 
-        //$Footer = new Footer;
         $Footer = Footer::whereNotNull('inforows')->whereNotNull('title1')->first();
         $Footer->inforows = $inforows;
         $Footer->title1 = $title1;
@@ -93,6 +95,7 @@ class FooterController extends Controller
     }
     
 
+    // =====TAGS====
     function tagstore()
     {
         $title2 = request()->input('title2');
@@ -112,27 +115,64 @@ class FooterController extends Controller
 
         return redirect('dashboard/dynamic-edit/footer');
     }
-    
-    function taghasRecord()
+
+    function tagsupdate()
     {
-        $Footer = new Footer;
-        if(Footer::whereNotNull('title2') && $Footer->tagrows == null)
+        $title2 = request()->input('title2');
+        $tag = request()->input('tag');
+        if($tag != null)
         {
-            dd('deneme');
-            $Footer = Footer::whereNotNull('title2')->first();
+            $tagsCount = count($tag); // $tagsrowsCount yerine $tagsCount adını kullanın
+            $index = 0;
+            $tagsrows = [];
+            while($index < $tagsCount){
+                $tagsrows[$tag[$index]] = [
+                    "tag" => $tag[$index]
+                ];
+                $index++;
+            }
+            $tagsrows=json_encode($tagsrows,JSON_UNESCAPED_UNICODE);
+        
         }
-        elseif(Footer::whereNotNull('title2') && Footer::whereNotNull('tagrows'))
+        else
         {
-            $Footer = Footer::whereNotNull('tagsrows')->whereNotNull('title2')->first();
-            return $Footer ?? null;
+            $tagsrows = null;
         }
+
+        $Footer = Footer::whereNotNull('tagsrows')->whereNotNull('title2')->first();
+        $Footer->tagsrows = $tagsrows;
+        $Footer->title2 = $title2;
+        $Footer->save();
+        return redirect('dashboard/dynamic-edit/footer');
+    }
+    
+    function tagsdelete()
+    {
+        $Footer = Footer::whereNotNull('tagsrows')->first();
+        $tagsrows=json_decode($Footer->tagsrows, TRUE);
+        if (array_key_exists(request()->all()["tag"],$tagsrows))
+        {
+            unset($tagsrows[request()->all()["tag"]]);
+            //dd($tagsrows);
+
+            $tagsrows=json_encode($tagsrows,JSON_UNESCAPED_UNICODE);
+            $Footer->tagsrows = $tagsrows;
+     
+            $Footer->save();
+
+        }
+        else
+        {
+            echo "Key does not exist!";
+        }
+        return redirect('dashboard/dynamic-edit/footer');
     }
 
-    // function taghasRecord()
-    // {
-    //     $Footer = Footer::whereNotNull('tagsrows')->whereNotNull('title2')->first();
-    //     return $Footer ?? null;
-    // }
+    function taghasRecord()
+    {
+        $Footer = Footer::whereNotNull('tagsrows')->whereNotNull('title2')->first();
+        return $Footer ?? null;
+    }
 
     // function taghasRecord()
     // {
@@ -148,4 +188,44 @@ class FooterController extends Controller
     //         return $Footer ?? null;
     //     }
     // }
+
+
+    //=====IMAGE====
+    function imagestore()
+    {
+        $title3 = request()->input('title3');
+        $image = request()->file('image');
+
+        if ($image != null) {
+            $imagerows = [
+                "image" => 'footer/' . $image->getClientOriginalName()
+            ];
+            $imagerows = [$imagerows];
+            $image->storeAs('public/images/footer/', $image->getClientOriginalName());
+            $imagerows=json_encode($imagerows,JSON_UNESCAPED_UNICODE);
+        } else {
+            $imagerows = null;
+        }
+
+        $Footer = Footer::find(1);
+
+        if ($Footer->inforows == null && $Footer->tagsrows == null) {
+            $Footer->imagerows = $imagerows;
+            $Footer->title3 = $title3;
+            $Footer->save();
+        } else {
+            $Footer = Footer::whereNull('imagerows')->whereNull('title3')->first();
+            $Footer->imagerows = $imagerows;
+            $Footer->title3 = $title3;
+            $Footer->save();
+        }
+
+        return redirect('dashboard/dynamic-edit/footer');
+    }
+
+    function imagehasRecord()
+    {
+        $Footer = Footer::whereNotNull('imagerows')->whereNotNull('title3')->first();
+        return $Footer ?? null;
+    }
 }

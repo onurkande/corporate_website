@@ -1,6 +1,7 @@
 @extends('layouts.dynamic')
 @section('footer','FOOTER')
 @section('content')
+    {{-- INFO --}}
     @if($infoRecord)
         <form action="InfoRows-update" method="post">
             @csrf
@@ -48,8 +49,9 @@
 
     <br>
 
+    {{-- TAG --}}
     @if($tagsRecord)
-        <form method="post">
+        <form method="post" action="TagsRows-update">
             @csrf
             <label>title2</label>
             <input type="text" name="title2" value="{{$tagsRecord->title2}}"><br>
@@ -62,7 +64,7 @@
                 @foreach($tagsrows as $tagsrow)
                     <label>tag</label>
                     <input type="text" name="tag[]" value="{{$tagsrow['tag']}}">
-                    {{-- <a href="{{route('tagsrows-delete', ['tag'=>$tagsrow['tag']])}}"> sil </a><br> --}}
+                    <a href="{{route('tagsrows-delete', ['tag'=>$tagsrow['tag']])}}"> sil </a><br>
                 @endforeach
                 <hr>
                 <section id="more-tagsrow">
@@ -93,14 +95,52 @@
 
     <br>
 
-    <form method="post">
-        @csrf
-        <label>title3</label>
-        <input type="text" name="title3"><br>
-        <label>image</label>
-        <input type="text" name="image"><br>
-        <input type="submit" value="kaydet">
-    </form>
+    {{-- IMAGE --}}
+    @if($imageRecord)
+        <form method="post" enctype="multipart/form-data">
+            @csrf
+            <label>title3</label>
+            <input type="text" name="title3"><br>
+
+            @if($imageRecord->imagerows != null)
+                @php
+                    $imagerows=json_decode($imageRecord->imagerows, TRUE);
+                @endphp
+                
+                @foreach($imagerows as $imagerow)
+                    <label>image</label><br>
+                    <img src="{{ asset('/images/'. $imagerow['image']) }}" alt="Resim" width="200">
+                    <input type="hidden" name="oldImage[]" value="{{$imagerow['image']}}">
+                    <input type="file" name="image[]">
+                    {{-- <a href="/dashboard/dynamic-edit/InfoBox-delete/{{$row['file']}}"> sil </a><br> --}}
+                @endforeach
+                <hr>
+                <section id="more-imagerow">
+                </section>
+            @else
+                <label>image</label>
+                <input type="file" name="image[]"><br>
+                <section id="more-imagerow">
+                </section>
+            @endif
+            <div>
+                <a onclick="addimagerow()">+</a>
+                <a onclick="removeimagerow()">-</a>
+            </div>
+
+            <input type="submit" value="güncelle">
+        </form>
+    @else
+       <form method="post" enctype="multipart/form-data">
+            @csrf
+            <label>title3</label>
+            <input type="text" name="title3"><br>
+            <label>image</label>
+            <input type="file" name="image"><br>
+            <input type="submit" value="kaydet">
+        </form> 
+    @endif
+
 
     <br>
 
@@ -111,6 +151,10 @@
         <input type="submit" value="kaydet">
     </form>
 
+
+    {{-- ====== SCRİPT ====== --}}
+
+    {{-- info script --}}
     <script>
         function addinforows()
         {
@@ -128,6 +172,7 @@
         }
     </script>
 
+    {{-- tag script --}}
     <script>
         function addtagsrow()
         {
@@ -140,6 +185,24 @@
         function removetagsrow()
         {
             const columnSection = document.getElementById("more-tagsrow");
+            const lastColumn = columnSection.querySelector("div:last-child");
+            lastColumn.parentElement.removeChild(lastColumn);
+        }
+    </script>
+
+    {{-- image script --}}
+    <script>
+        function addimagerow()
+        {
+            const moreimagerow = document.getElementById('more-imagerow');
+            const row = document.createElement("div");
+            row.innerHTML = '<div><input type="file" name="image[]" required></div>';
+            moreimagerow.appendChild(row);
+        }
+
+        function removeimagerow()
+        {
+            const columnSection = document.getElementById("more-imagerow");
             const lastColumn = columnSection.querySelector("div:last-child");
             lastColumn.parentElement.removeChild(lastColumn);
         }

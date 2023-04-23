@@ -28,7 +28,6 @@ class InfoBoxController extends Controller
 
     function store()
     {
-
         $title=request()->input('title');
         $file=request()->file('file');
 
@@ -59,7 +58,6 @@ class InfoBoxController extends Controller
         $infobox->save();
 
         return redirect('dashboard/dynamic-edit/info-box');
-
     }
 
     function update()
