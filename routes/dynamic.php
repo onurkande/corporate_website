@@ -101,8 +101,10 @@
         Route::post('/footer',[FooterController::class, 'tagstore']);
         Route::post('/TagsRows-update',[FooterController::class, 'tagsupdate']);
         Route::get('/tagsrows-delete',[FooterController::class, 'tagsdelete'])->name('tagsrows-delete');
-
+        
         Route::post('/footer',[FooterController::class, 'imagestore']);
+        Route::post('/ImageRows-update',[FooterController::class, 'imageupdate']);
+        Route::get('ImageRows-delete/footer/{image}',[FooterController::class,'imagedelete']);
     });
 
     Route::get('/images/InfoBoxDownloads/{file}', [InfoBoxController::class, 'downloadFile'])->name('download');

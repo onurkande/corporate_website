@@ -47,7 +47,7 @@
         </form>
     @endif
 
-    <br>
+    <br><br>
 
     {{-- TAG --}}
     @if($tagsRecord)
@@ -93,14 +93,14 @@
         </form>
     @endif
 
-    <br>
+    <br><br>
 
     {{-- IMAGE --}}
     @if($imageRecord)
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" action="ImageRows-update" enctype="multipart/form-data">
             @csrf
             <label>title3</label>
-            <input type="text" name="title3"><br>
+            <input type="text" name="title3" value="{{$imageRecord->title3}}"><br>
 
             @if($imageRecord->imagerows != null)
                 @php
@@ -108,11 +108,11 @@
                 @endphp
                 
                 @foreach($imagerows as $imagerow)
-                    <label>image</label><br>
+                    <br>
                     <img src="{{ asset('/images/'. $imagerow['image']) }}" alt="Resim" width="200">
                     <input type="hidden" name="oldImage[]" value="{{$imagerow['image']}}">
                     <input type="file" name="image[]">
-                    {{-- <a href="/dashboard/dynamic-edit/InfoBox-delete/{{$row['file']}}"> sil </a><br> --}}
+                    <a href="/dashboard/dynamic-edit/ImageRows-delete/{{$imagerow['image']}}"> sil </a><br>
                 @endforeach
                 <hr>
                 <section id="more-imagerow">
@@ -142,7 +142,7 @@
     @endif
 
 
-    <br>
+    <br><br>
 
     <form method="post">
         @csrf

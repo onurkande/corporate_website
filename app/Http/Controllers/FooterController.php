@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Storage;
 use App\Models\Footer;
 use Illuminate\Http\Request;
 
@@ -221,6 +222,81 @@ class FooterController extends Controller
         }
 
         return redirect('dashboard/dynamic-edit/footer');
+    }
+
+    function imageupdate()
+    {
+        $title3=request()->input('title3');
+        $image =request()->file('image');
+        $oldImage = request()->input('oldImage');
+        
+        if($image != null)
+        {
+            $index = 0;
+            $imageKey = array_key_last($image);
+            $oldKey = array_key_last($oldImage);
+            $total = max($imageKey,$oldKey) +1 ;
+            $imagerows = [];
+            
+            for($index = 0;$index < $total; $index++){
+                //dd($oldFile);
+                $imagerows[$index] = [
+                    "image" => isset($image[$index]) ? 'footer/'.$image[$index]->getClientOriginalName() : $oldImage[$index]
+                ];
+                
+                if(isset($image[$index])){
+                    $image[$index]->storeAs('public/images/footer/', $image[$index]->getClientOriginalName());
+                }
+               
+            }
+        
+            $imagerows=json_encode($imagerows,JSON_UNESCAPED_UNICODE);
+        }
+        else
+        {
+            $imagerows = null;
+        }
+        
+        
+
+        $Footer = Footer::whereNotNull('imagerows')->whereNotNull('title3')->first();
+        $Footer->imagerows = $imagerows;
+        $Footer->title3 = $title3;
+        $Footer->save();
+        return redirect('dashboard/dynamic-edit/footer');
+    }
+
+    public function imagedelete($image)
+    {
+        $image = "footer/".$image;
+        // $record = InfoBox::latest()->first();
+        $Footer = Footer::whereNotNull('imagerows')->latest()->first();
+
+        if($Footer)
+        {
+            $imagerows = json_decode($Footer->imagerows, true);
+
+            foreach($imagerows as $key => $value)
+            {
+                if($value['image'] == $image)
+                {
+                   
+                    // Delete the file from the storage
+                    Storage::delete('InfoBoxDownloads/'.$image);
+
+                    // Remove the record from the array
+                    unset($imagerows[$key]);
+
+                    // Update the rows in the database
+                    $Footer->imagerows = json_encode($imagerows);
+                    $Footer->save();
+                    
+                    return redirect('dashboard/dynamic-edit/footer')->with('success', 'image deleted successfully');
+                }
+            }
+        }
+
+        return redirect()->back()->with('error', 'File not found');
     }
 
     function imagehasRecord()
