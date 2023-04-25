@@ -94,17 +94,21 @@
         Route::post('/ServiceDetail-update',[ServiceDetailController::class, 'update']);
         
         Route::get('/footer',[FooterController::class, 'index']);
-        Route::post('/footer',[FooterController::class, 'infostore']);
+        
+        Route::post('/InfoRows-store',[FooterController::class, 'infostore']);
         Route::post('/InfoRows-update',[FooterController::class, 'infoupdate']);
         Route::get('/inforows-delete',[FooterController::class, 'infodelete'])->name('inforows-delete');
 
-        Route::post('/footer',[FooterController::class, 'tagstore']);
+        Route::post('/TagsRows-store',[FooterController::class, 'tagstore']);
         Route::post('/TagsRows-update',[FooterController::class, 'tagsupdate']);
         Route::get('/tagsrows-delete',[FooterController::class, 'tagsdelete'])->name('tagsrows-delete');
         
-        Route::post('/footer',[FooterController::class, 'imagestore']);
+        Route::post('/ImageRows-store',[FooterController::class, 'imagestore']);
         Route::post('/ImageRows-update',[FooterController::class, 'imageupdate']);
         Route::get('ImageRows-delete/footer/{image}',[FooterController::class,'imagedelete']);
+
+        Route::post('/title4-store',[FooterController::class, 'title4store']);
+        Route::post('/title4-update',[FooterController::class, 'title4update']);
     });
 
     Route::get('/images/InfoBoxDownloads/{file}', [InfoBoxController::class, 'downloadFile'])->name('download');

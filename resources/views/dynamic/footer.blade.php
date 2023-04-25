@@ -35,7 +35,7 @@
             <input type="submit" value="güncelle">
         </form>
     @else
-        <form method="post">
+        <form action="InfoRows-store" method="post">
             @csrf
             <label>title1</label>
             <input type="text" name="title1"><br>
@@ -83,7 +83,7 @@
             <input type="submit" value="güncelle">
         </form>
     @else
-        <form method="post">
+        <form action="TagsRows-store" method="post">
             @csrf
             <label>title2</label>
             <input type="text" name="title2"><br>
@@ -131,7 +131,7 @@
             <input type="submit" value="güncelle">
         </form>
     @else
-       <form method="post" enctype="multipart/form-data">
+       <form action="ImageRows-store" method="post" enctype="multipart/form-data">
             @csrf
             <label>title3</label>
             <input type="text" name="title3"><br>
@@ -144,12 +144,23 @@
 
     <br><br>
 
-    <form method="post">
-        @csrf
-        <label>title4</label>
-        <input type="text" name="title4"><br>
-        <input type="submit" value="kaydet">
-    </form>
+    {{-- TITLE4 --}}
+    @if($title4Record)
+        <form method="post" action="title4-update">
+            @csrf
+            <label>title4</label>
+            <input type="text" name="title4" value="{{$title4Record->title4}}"><br>
+            <input type="submit" value="güncelle">
+        </form>
+    @else
+        <form action="title4-store" method="post">
+            @csrf
+            <label>title4</label>
+            <input type="text" name="title4"><br>
+            <input type="submit" value="kaydet">
+        </form>
+    @endif
+    
 
 
     {{-- ====== SCRİPT ====== --}}

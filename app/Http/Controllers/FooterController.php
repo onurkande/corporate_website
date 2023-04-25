@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 use App\Models\Footer;
 use Illuminate\Http\Request;
 
@@ -13,7 +14,8 @@ class FooterController extends Controller
         $infoRecord = $this->infohasRecord();
         $tagsRecord = $this->taghasRecord();
         $imageRecord = $this->imagehasRecord();
-        return view('dynamic.footer',['infoRecord'=>$infoRecord,'tagsRecord'=>$tagsRecord,'imageRecord'=>$imageRecord]);
+        $title4Record = $this->title4hasRecord();
+        return view('dynamic.footer',['infoRecord'=>$infoRecord,'tagsRecord'=>$tagsRecord,'imageRecord'=>$imageRecord,'title4Record'=>$title4Record]);
     }
 
 
@@ -27,13 +29,31 @@ class FooterController extends Controller
         ];
         $inforows = [$inforows];
         $inforows=json_encode($inforows,JSON_UNESCAPED_UNICODE);
+        
+        // dd($inforows);
 
-        $Footer = Footer::whereNull('inforows')->whereNull('title1')->get()->first();
-        $Footer->inforows = $inforows;
-        $Footer->title1 = $title1;
-        $Footer->save();
+        // Footer tablosundaki satır sayısını al
+        $rowCount = DB::table('footers')->count();
 
-        return redirect('dashboard/dynamic-edit/footer');
+        if ($rowCount === 0) {
+            // Footer tablosunda veri yok
+            //dd('veriyok');
+            $Footer = new Footer;
+            $Footer->inforows = $inforows;
+            $Footer->title1 = $title1;
+            $Footer->save();
+            return redirect('dashboard/dynamic-edit/footer');
+        } else {
+            // Footer tablosunda en az bir satır var
+            //dd('veriyok2');
+            $Footer = new Footer;
+            //$Footer->$Footer::find(1);
+            $Footer = Footer::whereNull('inforows')->whereNull('title1')->get()->first();
+            $Footer->inforows = $inforows;
+            $Footer->title1 = $title1;
+            $Footer->save();
+            return redirect('dashboard/dynamic-edit/footer');
+        }
     }
 
     function infoupdate()
@@ -91,6 +111,7 @@ class FooterController extends Controller
 
     function infohasRecord()
     {
+        $Footer = Footer::find(1);
         $Footer = Footer::whereNotNull('inforows')->whereNotNull('title1')->first();
         return $Footer ?? null;
     }
@@ -107,14 +128,26 @@ class FooterController extends Controller
         $tagsrows = [$tagsrows];
         $tagsrows=json_encode($tagsrows,JSON_UNESCAPED_UNICODE);
 
-        //$Footer = new Footer;
-        //$Footer = Footer::whereNull('tagsrows')->whereNull('title2')->first();
-        $Footer = Footer::whereNull('tagsrows')->whereNull('title2')->get()->first();
-        $Footer->tagsrows = $tagsrows;
-        $Footer->title2 = $title2;
-        $Footer->save();
+        // Footer tablosundaki satır sayısını al
+        $rowCount = DB::table('footers')->count();
 
-        return redirect('dashboard/dynamic-edit/footer');
+        if ($rowCount === 0) {
+            // Footer tablosunda veri yok
+            $Footer = new Footer;
+            $Footer->tagsrows = $tagsrows;
+            $Footer->title2 = $title2;
+            $Footer->save();
+            return redirect('dashboard/dynamic-edit/footer');
+        } else {
+            // Footer tablosunda en az bir satır var
+            $Footer = new Footer;
+            $Footer = Footer::whereNull('tagsrows')->whereNull('title2')->get()->first();
+            $Footer->tagsrows = $tagsrows;
+            $Footer->title2 = $title2;
+            $Footer->save();
+            return redirect('dashboard/dynamic-edit/footer');
+        }
+
     }
 
     function tagsupdate()
@@ -175,21 +208,6 @@ class FooterController extends Controller
         return $Footer ?? null;
     }
 
-    // function taghasRecord()
-    // {
-    //     $Footer = new Footer;
-    //     if(Footer::whereNotNull('title2') && Footer::whereNull('tagsrows'))
-    //     {
-    //         dd('deneme');
-    //         $Footer = Footer::whereNotNull('title2')->first();
-    //     }
-    //     elseif(Footer::whereNotNull('title2') && Footer::whereNotNull('tagrows'))
-    //     {
-    //         $Footer = Footer::whereNotNull('tagsrows')->whereNotNull('title2')->first();
-    //         return $Footer ?? null;
-    //     }
-    // }
-
 
     //=====IMAGE====
     function imagestore()
@@ -208,20 +226,25 @@ class FooterController extends Controller
             $imagerows = null;
         }
 
-        $Footer = Footer::find(1);
+        // Footer tablosundaki satır sayısını al
+        $rowCount = DB::table('footers')->count();
 
-        if ($Footer->inforows == null && $Footer->tagsrows == null) {
+        if ($rowCount === 0) {
+            // Footer tablosunda veri yok
+            $Footer = new Footer;
             $Footer->imagerows = $imagerows;
             $Footer->title3 = $title3;
             $Footer->save();
+            return redirect('dashboard/dynamic-edit/footer');
         } else {
-            $Footer = Footer::whereNull('imagerows')->whereNull('title3')->first();
+            // Footer tablosunda en az bir satır var
+            $Footer = new Footer;
+            $Footer = Footer::whereNull('imagerows')->whereNull('title3')->get()->first();
             $Footer->imagerows = $imagerows;
             $Footer->title3 = $title3;
             $Footer->save();
+            return redirect('dashboard/dynamic-edit/footer');
         }
-
-        return redirect('dashboard/dynamic-edit/footer');
     }
 
     function imageupdate()
@@ -302,6 +325,56 @@ class FooterController extends Controller
     function imagehasRecord()
     {
         $Footer = Footer::whereNotNull('imagerows')->whereNotNull('title3')->first();
+        return $Footer ?? null;
+    }
+
+
+    //=====TITLE4====
+    function title4store()
+    {
+        $title4 = request()->input('title4');
+
+        // Footer tablosundaki satır sayısını al
+        $rowCount = DB::table('footers')->count();
+
+        if ($rowCount === 0) {
+            // Footer tablosunda veri yok
+            $Footer = new Footer;
+            $Footer->title4 = $title4;
+            $Footer->save();
+            return redirect('dashboard/dynamic-edit/footer');
+        } else {
+            // Footer tablosunda en az bir satır var
+            $Footer = new Footer;
+            $Footer = Footer::whereNull('title4')->get()->first();
+            $Footer->title4 = $title4;
+            $Footer->save();
+            return redirect('dashboard/dynamic-edit/footer');
+        }
+    }
+
+    function title4update()
+    {
+        $title4 = request()->input('title4');
+
+        $Footer = Footer::find(1);
+        
+
+        if ($Footer->inforows == null && $Footer->tagsrows == null) {
+            $Footer->title4 = $title4;
+            $Footer->save();
+        } else {
+            $Footer = Footer::whereNull('title4')->first();
+            $Footer->title4 = $title4;
+            $Footer->save();
+        }
+
+        return redirect('dashboard/dynamic-edit/footer');
+    }
+
+    function title4hasRecord()
+    {
+        $Footer = Footer::whereNotNull('title4')->first();
         return $Footer ?? null;
     }
 }
