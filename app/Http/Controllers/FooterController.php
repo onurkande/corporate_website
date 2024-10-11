@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 use App\Models\Footer;
 use Illuminate\Http\Request;
 
@@ -10,9 +12,14 @@ class FooterController extends Controller
     function index()
     {
         $infoRecord = $this->infohasRecord();
-        return view('dynamic.footer',['infoRecord'=>$infoRecord]);
+        $tagsRecord = $this->taghasRecord();
+        $imageRecord = $this->imagehasRecord();
+        $title4Record = $this->title4hasRecord();
+        return view('dynamic.footer',['infoRecord'=>$infoRecord,'tagsRecord'=>$tagsRecord,'imageRecord'=>$imageRecord,'title4Record'=>$title4Record]);
     }
 
+
+    // ====INFO====
     function infostore()
     {
         $info = request()->input('info');
@@ -22,13 +29,31 @@ class FooterController extends Controller
         ];
         $inforows = [$inforows];
         $inforows=json_encode($inforows,JSON_UNESCAPED_UNICODE);
+        
+        // dd($inforows);
 
-        $Footer = new Footer;
-        $Footer->inforows = $inforows;
-        $Footer->title1 = $title1;
-        $Footer->save();
+        // Footer tablosundaki satır sayısını al
+        $rowCount = DB::table('footers')->count();
 
-        return redirect('dashboard/dynamic-edit/footer');
+        if ($rowCount === 0) {
+            // Footer tablosunda veri yok
+            //dd('veriyok');
+            $Footer = new Footer;
+            $Footer->inforows = $inforows;
+            $Footer->title1 = $title1;
+            $Footer->save();
+            return redirect('dashboard/dynamic-edit/footer');
+        } else {
+            // Footer tablosunda en az bir satır var
+            //dd('veriyok2');
+            $Footer = new Footer;
+            //$Footer->$Footer::find(1);
+            $Footer = Footer::whereNull('inforows')->whereNull('title1')->get()->first();
+            $Footer->inforows = $inforows;
+            $Footer->title1 = $title1;
+            $Footer->save();
+            return redirect('dashboard/dynamic-edit/footer');
+        }
     }
 
     function infoupdate()
@@ -54,7 +79,6 @@ class FooterController extends Controller
             $inforows = null;
         }
 
-        //$Footer = new Footer;
         $Footer = Footer::whereNotNull('inforows')->whereNotNull('title1')->first();
         $Footer->inforows = $inforows;
         $Footer->title1 = $title1;
@@ -87,6 +111,7 @@ class FooterController extends Controller
 
     function infohasRecord()
     {
+        $Footer = Footer::find(1);
         $Footer = Footer::whereNotNull('inforows')->whereNotNull('title1')->first();
         return $Footer ?? null;
     }

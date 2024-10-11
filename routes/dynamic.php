@@ -99,7 +99,8 @@
         Route::post('/ServiceDetail-update',[ServiceDetailController::class, 'update']);
         
         Route::get('/footer',[FooterController::class, 'index']);
-        Route::post('/footer',[FooterController::class, 'infostore']);
+        
+        Route::post('/InfoRows-store',[FooterController::class, 'infostore']);
         Route::post('/InfoRows-update',[FooterController::class, 'infoupdate']);
         Route::get('/inforows-delete',[FooterController::class, 'infodelete'])->name('inforows-delete');
 
