@@ -6,23 +6,21 @@
             <div class="themesflat-tabs style-2 title-w170 clearfix">
                 <ul class="tab-title clearfix ">
                     @php
-                    $rows = json_decode($record->rows, TRUE);
+                        $header = json_decode($record->header, TRUE);
                     @endphp
-                    @foreach($rows as $row)
+                    @foreach($header as $single)
                         <li class="item-title active">
-                            <span class="inner">{{$row['header']}}</span>
+                            <span class="inner">{{$single}}</span>
                         </li>   
                     @endforeach
                 </ul>
 
                 <div class="tab-content-wrap clearfix">
-                    @foreach($rows as $row)
-                        <div class="tab-content">
-                            <div class="item-content">                                                            
-                                <p>{{$row['content']}}</p>
-                            </div>
-                        </div><!-- /.tab-content -->
-                    @endforeach
+                    <div class="tab-content">
+                        <div class="item-content">                                                            
+                            <p>{{$record->content}}</p>
+                        </div>
+                    </div><!-- /.tab-content -->
                 </div><!-- /.tab-content-wrap -->
             </div><!-- /.themesflat-tabs -->
         </div>        

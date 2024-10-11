@@ -90,4 +90,23 @@ class FooterController extends Controller
         $Footer = Footer::whereNotNull('inforows')->whereNotNull('title1')->first();
         return $Footer ?? null;
     }
+    
+
+    function tagstore()
+    {
+        $title2 = request()->input('title2');
+        $tag = request()->input('tag');
+        $tagsrows=[
+            "tag" => $tag
+        ];
+        $tagsrows = [$tagsrows];
+        $tagsrows=json_encode($tagsrows,JSON_UNESCAPED_UNICODE);
+
+        $Footer = Footer::whereNull('tagsrows')->whereNull('title2')->first();
+        $Footer->tagsrows = $tagsrows;
+        $Footer->title2 = $title2;
+        $Footer->save();
+
+        return redirect('dashboard/dynamic-edit/footer');
+    }    
 }

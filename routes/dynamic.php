@@ -28,13 +28,15 @@
         Route::get('/faq-delete',[FaqController::class, 'delete'])->name('faq-delete');
 
         Route::get('/contact-us-row', [ContactUsRowController::class, 'index']);
-        Route::post('/contact-us-row', [ContactUsRowController::class, 'store']);
-        Route::post('/ContactUsRow-update', [ContactUsRowController::class, 'update']);
-        Route::get('/ContactUsRow-delete', [ContactUsRowController::class, 'delete'])->name('ContactUsRow-delete');
+        Route::post('/ContactUsRow-insert', [ContactUsRowController::class, 'store']);
+        Route::post('/ContactUsRow-update/{id}', [ContactUsRowController::class, 'update']);
+        Route::get('/ContactUsRow-delete/{id}', [ContactUsRowController::class, 'delete']);
+        Route::get('/allContactUsRow-delete/{id}', [ContactUsRowController::class, 'alldelete']);
 
         Route::get('/contact-us-line',[ContactUsLineController::class, 'index']);
-        Route::post('/contact-us-line',[ContactUsLineController::class, 'store']);
-        Route::post('/ContactUsLine-update',[ContactUsLineController::class, 'update']);
+        Route::post('/ContactUsLine-insert',[ContactUsLineController::class, 'store']);
+        Route::post('/ContactUsLine-update/{id}',[ContactUsLineController::class, 'update']);
+        Route::get('/ContactUsLine-delete/{id}', [ContactUsLineController::class, 'delete']);
 
         Route::get('/counter', [CounterController::class, 'index']);
         Route::post('/counter', [CounterController::class, 'store']);
@@ -47,13 +49,15 @@
         Route::get('/team-delete',[TeamController::class, 'delete'])->name('team-delete');
 
         Route::get('/about',[AboutController::class, 'index']);
-        Route::post('/about',[AboutController::class, 'store']);
-        Route::post('/about-update',[AboutController::class, 'update']);
+        Route::post('/about-insert',[AboutController::class, 'store']);
+        Route::post('/about-update/{id}',[AboutController::class, 'update']);
+        Route::get('/about-delete/{id}',[AboutController::class, 'delete'])->name('about-delete');
 
         Route::get('/about-row',[AboutRowController::class, 'index']);
-        Route::post('/about-row',[AboutRowController::class, 'store']);
-        Route::post('/aboutRow-update',[AboutRowController::class, 'update']);
-        Route::get('/aboutRow-delete',[AboutRowController::class, 'delete'])->name('aboutRows-delete');
+        Route::post('/aboutRow-insert',[AboutRowController::class, 'store']);
+        Route::post('/aboutRow-update/{id}',[AboutRowController::class, 'update']);
+        Route::get('/aboutRow-delete/{id}',[AboutRowController::class, 'delete'])->name('aboutRows-delete');
+        Route::get('/allAboutRow-delete/{id}',[AboutRowController::class, 'allDelete'])->name('aboutRows-delete');
 
         Route::get('/featured-project',[FeaturedProjectController::class, 'index']);
         Route::post('/featured-project',[FeaturedProjectController::class, 'store']);
@@ -61,18 +65,19 @@
         Route::get('/featuredProject-delete',[FeaturedProjectController::class, 'delete'])->name('featuredProject-delete');;
 
         Route::get('/best-services',[BestServicesController::class, 'index']);
-        Route::post('/best-services',[BestServicesController::class, 'store']);
-        Route::post('/bestServices-update',[BestServicesController::class, 'update']);
-        Route::get('/bestServices-delete',[BestServicesController::class, 'delete'])->name('bestServices-delete');
+        Route::post('/best-services-insert',[BestServicesController::class, 'store']);
+        Route::post('/bestServices-update/{id}',[BestServicesController::class, 'update']);
+        Route::get('/bestServices-delete/{id}',[BestServicesController::class, 'delete'])->name('bestServices-delete');
         
         Route::get('/email-box',[EmailBoxController::class, 'index']);
         Route::post('/email-box',[EmailBoxController::class, 'store']);
         Route::post('/emailBox-update',[EmailBoxController::class, 'update']);
         
         Route::get('/consult-with-us',[ConsultWithUsController::class, 'index']);
-        Route::post('/consult-with-us',[ConsultWithUsController::class, 'store']);
-        Route::post('/ConsultWithUs-update',[ConsultWithUsController::class, 'update']);
-        Route::get('/ConsultWithUs-delete',[ConsultWithUsController::class, 'delete'])->name('ConsultWithUs-delete');
+        Route::post('/consultWithUs-insert',[ConsultWithUsController::class, 'store']);
+        Route::post('/consultWithUs-update/{id}',[ConsultWithUsController::class, 'update']);
+        Route::get('/consultWithUs-delete/{id}',[ConsultWithUsController::class, 'delete'])->name('ConsultWithUs-delete');
+        Route::get('/allConsultWithUs-delete/{id}',[ConsultWithUsController::class, 'allDelete']);
 
         Route::get('/info-box',[InfoBoxController::class, 'index']);
         Route::post('/info-box',[InfoBoxController::class, 'store']);
@@ -97,6 +102,8 @@
         Route::post('/footer',[FooterController::class, 'infostore']);
         Route::post('/InfoRows-update',[FooterController::class, 'infoupdate']);
         Route::get('/inforows-delete',[FooterController::class, 'infodelete'])->name('inforows-delete');
+
+        Route::post('/footer',[FooterController::class, 'tagstore']);
     });
 
     Route::get('/images/InfoBoxDownloads/{file}', [InfoBoxController::class, 'downloadFile'])->name('download');

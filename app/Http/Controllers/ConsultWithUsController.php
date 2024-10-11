@@ -9,8 +9,8 @@ class ConsultWithUsController extends Controller
 {
     function index()
     {
-        $record = $this->hasRecord();
-        return view('dynamic/consult-with-us',['record'=>$record]);
+        $consultwithus = ConsultWithUs::latest()->first();
+        return view('dynamic/consult-with-us',['record'=>$consultwithus]);
     }
 
     function view()
@@ -21,90 +21,80 @@ class ConsultWithUsController extends Controller
 
     function store()
     {
+        $consultwithus = new ConsultWithUs;
+
         $title = request()->input('title');
         $header = request()->input('header');
         $content = request()->input('content');
 
-        if ($header != null or $content != null) {
-            $rows = [
-                $header => [
-                    "header" => $header,
-                    "content" => $content
-                ]
-            ];
+        $header = json_encode($header, JSON_UNESCAPED_UNICODE);
+        $consultwithus->header = $header;
 
-            $rows = json_encode($rows, JSON_UNESCAPED_UNICODE);
-        } else {
-            $rows = null;
-        }
-
-        $consultwithus = new ConsultWithUs;
         $consultwithus->title = $title;
-        $consultwithus->rows = $rows;
+        $consultwithus->content = $content;
 
         $consultwithus->save();
 
-        return redirect('dashboard/dynamic-edit/consult-with-us');
+        return redirect('dashboard/dynamic-edit/consult-with-us')->with('store',"Consul With Us eklendi");
     }
 
-    function update()
+    function update($id)
     {
+        $consultwithus = ConsultWithUs::find($id);
+
         $title = request()->input('title');
         $header = request()->input('header');
         $content = request()->input('content');
 
-        $allRows = [$header, $content];
-
-        if ($header != null or $content != null) {
-            $rowsCount = count($header);
-            $index = 0;
-            $rows = [];
-            while($index < $rowsCount){
-                $rows[$header[$index]] = [
-                    "header" => $header[$index],
-                    "content" => $content[$index]
-                ];
-                $index++;
-            }
-            $rows=json_encode($rows,JSON_UNESCAPED_UNICODE);
-        } else {
-            $rows = null;
-        }
-
-        $consultwithus = ConsultWithUs::latest()->first();
+        $header = json_encode($header, JSON_UNESCAPED_UNICODE);
+        $consultwithus->header = $header;
+        
         $consultwithus->title = $title;
-        $consultwithus->rows = $rows;
+        $consultwithus->content = $content;
 
         $consultwithus->save();
 
-        return redirect('dashboard/dynamic-edit/consult-with-us');
+        return redirect('dashboard/dynamic-edit/consult-with-us')->with('update',"Consul With Us güncellendi");
     }
 
     function hasRecord()
     {
-        $consultwithus = ConsultWithUs::find(1);
-        return $consultwithus ?? null;
+        $consultwithus = ConsultWithUs::latest()->first();
+        if ($consultwithus) {
+            return $consultwithus;
+        } else {
+            return $consultwithus;
+        }
     }
 
-    function delete()
+    function delete($id)
     {
-        $consultwithus = ConsultWithUs::find(1);
-        $rows=json_decode($consultwithus->rows, TRUE);
-        if(array_key_exists(request()->all()["header"],$rows))
-        {
-            unset($rows[request()->all()["header"]]);
-            // dd($rows);
+        $consultwithus = ConsultWithUs::first();
+        
+        $header = json_decode($consultwithus->header, TRUE);
 
-            $rows=json_encode($rows,JSON_UNESCAPED_UNICODE);
-            $consultwithus->rows = $rows;
-     
+        $index = array_search($id, $header);
+
+        if($header[$index])
+        {
+            unset($header[$index]);
+            
+            $consultwithus->header = json_encode(array_values($header), JSON_UNESCAPED_UNICODE);
+
             $consultwithus->save();
 
-        }
+            return redirect('dashboard/dynamic-edit/consult-with-us')->with('delete', "rows silindi");
+        } 
         else
         {
-            echo "Key does not exist!";
+            return redirect('dashboard/dynamic-edit/consult-with-us')->with('delete', "Değer dizide bulunamadı.");
         }
-        
+    }
+
+    function allDelete($id)
+    {
+        $consultwithus = ConsultWithUs::find($id);
+        $consultwithus->delete();
+        return redirect('dashboard/dynamic-edit/consult-with-us')->with('delete', "Consul With Us silindi");
     }
 }

@@ -1,78 +1,136 @@
 @extends('layouts.dynamic')
 @section('title','COUNTER')
 @section('content')
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+    @if(session()->has('store'))
+        <div class="alert alert-success" role="alert">
+            {{ session()->get('store') }}
+        </div>
+        <script>
+            setTimeout(function() {
+                $('.alert').fadeOut();
+            }, 5000);
+        </script>
+    @endif
 
-                @if($record)
-                    @if($record->columns != null)
-                        <form action="counter-update" method="post">
-                            @csrf
+    @if(session()->has('update'))
+        <div class="alert alert-info" role="alert">
+            {{ session()->get('update') }}
+        </div>
+        <script>
+            setTimeout(function() {
+                $('.alert').fadeOut();
+            }, 5000);
+        </script>
+    @endif
+
+    @if(session()->has('delete'))
+        <div class="alert alert-danger" role="alert">
+            {{ session()->get('delete') }}
+        </div>
+        <script>
+            setTimeout(function() {
+                $('.alert').fadeOut();
+            }, 5000);
+        </script>
+    @endif
+    <div class="card" style="padding: 0">
+        <div class="card-header">
+            <h3>Counter</h3>
+        </div>
+        <div class="card-body">
+
+            @if($record)
+                <form method="post" action="{{url('dashboard/dynamic-edit/counter-update/'.$record->id)}}">
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Title :</label>
                             @php
-                                $columns=json_decode($record->columns, TRUE);
+                                $title = json_decode($record->title, TRUE);
                             @endphp
-                            @foreach($columns as $single)
-   
-                            <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr;">
-                                <input type="text" name="title[]" value="{{$single['title']}}">
-                                <input type="text" name="number[]" value="{{$single['number']}}">
-                                <a href="{{route('counter-delete', ['title'=>$single['title']])}}"> sil </a>  
+                            <div class="row">
+                                @foreach($title as $single)
+                                <div class="col-md-1">
+                                    <a href="{{url('dashboard/dynamic-edit/counter-delete/'.$single)}}"><button class="btn-danger" type="button">Sil</button></a>
+                                </div>
+                                <div class="col-md-11">
+                                    <input type="text" name="title[]" class="form-control" value="{{$single}}" oninput="checkInputRowsValues()">
+                                </div>
+                                @endforeach
                             </div>
-                            <br>
-                            @endforeach
-                            <hr>
-                            <section id="more-column">
-
+                            <section id="more-title">
                             </section>
-                           
-                    @else
-                            <div style="display:grid; grid-template-columns:1fr 1fr 1fr;">
-                                <input type="text" name="title[]">
-                                <input type="text" name="number[]">
-                            </div>
-                            <hr>
-                            <section id="more-column">
-                                
-                            </section>
-                    @endif
                             <br>
                             <div>
-                                <a onclick="addColumn()">+</a>
-                                <a onclick="removeColumn()">-</a>
+                                <a onclick="addRows()"><button type="button">+</button></a>
+                                <a onclick="removeRows()"><button type="button">-</button></a>
                             </div>
-                        
-                            <input type="submit" value="güncelle">
-                        </form>
-                @else
-                    <form method="post">
-                        @csrf
-                        <input type="text" name="title">
-                        <input type="text" name="number">
-                        <input type="submit" value="kaydet">
-                    </form>
-                @endif
+                        </div>
+                        <div class="col-md-6">
+                            <label>Number :</label>
+                            @php
+                                $number = json_decode($record->number, TRUE);
+                            @endphp
+                            @foreach($number as $single)
+                                <input type="text" name="number[]" class="form-control" value="{{$single}}" oninput="checkInputRowsValues()">
+                            @endforeach
+                            <section id="more-number">
+                            </section>
+                        </div>
+                    </div>
 
-		        
+                    <br>
+                
+                    <div class="row mt-3">
+                        <div class="col-md-8">
+                            <button type="submit" class="btn btn-primary btn-lg btn-block" style="display: block; width: 100%;">Update</button>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="{{url('dashboard/dynamic-edit/allCounter-delete/'.$record->id)}}"><button class="btn-danger btn-lg" type="button">Counter Delete</button></a>
+                        </div>
+                    </div>
 
-            </div>
+                </form>
+            @else
+                <form method="post" action="{{url('dashboard/dynamic-edit/counter-insert')}}">
+
+                    @csrf
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Title :</label>
+                            <input type="text" name="title[]" class="form-control" oninput="checkInputRowsValues()">
+                            <section id="more-title">
+                            </section>
+                            <br>
+                            <div>
+                                <a onclick="addRows()"><button type="button">+</button></a>
+                                <a onclick="removeRows()"><button type="button">-</button></a>
+                            </div> 
+                        </div>
+                        <div class="col-md-6">
+                            <label>Number :</label>
+                            <input type="number" name="number[]" class="form-control" oninput="checkInputRowsValues()">
+                            <section id="more-number">
+                            </section>
+                        </div>
+                    </div>
+
+                    <br>
+                    
+                    <div class="row mt-3">
+                        <div class="col-md-8">
+                            <button type="submit" class="btn btn-primary btn-lg btn-block" style="display: block; width: 100%;">Submit</button>
+                        </div>
+                    </div>
+
+                </form>
+            @endif
+
+            
+
         </div>
     </div>
 
-    <script>
-        function addColumn()
-        {
-            const moreColumn = document.getElementById('more-column');
-            const row = document.createElement("div");
-            row.innerHTML = '<div><input type="text" name="title[]" required><input type="text" name="number[]" required></div>';
-            moreColumn.appendChild(row);
-        }
-
-        function removeColumn()
-        {
-            const columnSection = document.getElementById("more-column");
-            const lastColumn = columnSection.querySelector("div:last-child");
-            lastColumn.parentElement.removeChild(lastColumn);
-        }
-    </script>
+    
 @endsection

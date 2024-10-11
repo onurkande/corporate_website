@@ -23,103 +23,61 @@ class BestServicesController extends Controller
 
     function store()
     {
-        $title = request()->input('title');
-        $content = request()->input('content');
-        $header = request()->input('header');
-        $image = request()->file('image');
-        $button = request()->input('button');
-
-        $image_path = $image->storeAs('public/images/team', request()->file('image')->getClientOriginalName());
-
-        if ($header != null or $image != null) {
-            $rows = [
-                "$header" => [
-                    "header" => $header,
-                    'image' => 'bestServices/' . request()->file('image')->getClientOriginalName()
-                ]
-            ];
-
-            $rows = json_encode($rows, JSON_UNESCAPED_UNICODE);
-
-            // dd($rows);
-
-        } else {
-            $rows = null;
-        }
-
         $bestservices = new BestServices;
-        $bestservices->title = $title;
-        $bestservices->content = $content;
-        $bestservices->rows = $rows;
-        $bestservices->button = $button;
 
-        $bestservices->save();
-
-        return redirect('dashboard/dynamic-edit/best-services');
-
-
-    }
-
-    function update()
-    {
-        $title = request()->input('title');
-        $content = request()->input('content');
-        $header = request()->input('header');
-        $image = request()->file('image');
-        $button = request()->input('button');
-        $oldImage = request()->input('oldImage');
-        $radioImage = request()->input('radiobutton');
-        //dd($image);
-
-        $updatedImage = '';
-
-        $allrows = [$header, $image];
-        if ($header != null or $image != null) {
-            $rowsCount = count($header);
-            $index = 0;
-            $rows = [];
-            while ($index < $rowsCount) {
-                // $updateImage = isset($image[$index]) ? 'bestServices/' . request()->file('image')[$index]->getClientOriginalName() : $oldImage[$index];
-                // $updateImage = isset($radioImage) ? ltrim($radioImage,'/storage/images/') : $updateImage;
-                //dd($updateImage);
-
-                //dd($image[$index]);
-                if ($image != null) {
-                    if ($image[$index] != null) {
-                        $updatedImage = 'bestServices/' . $image[$index]->getClientOriginalName();
-                        $image[$index]->storeAs('public/images/bestServices', $image[$index]->getClientOriginalName());
-                    }
-                } elseif ($radioImage != null) {
-                    if ($radioImage[$index] != null) {
-                        $updatedImage = ltrim($radioImage[$index], '/storage/images/');
-                    }
-                } else {
-                    $updatedImage = $oldImage[$index];
-                }
-
-                $rows[$header[$index]] = [
-                    "header" => $header[$index],
-                    "image" => $updatedImage
-                ];
-                $index++;
+        if(request()->hasfile('image'))
+        {
+            $files = request()->file('image');
+            foreach($files as $file)
+            {
+                $filename[] = $file->getClientOriginalName();
+                $file->move('admin/bestServicesImage',$file->getClientOriginalName());
             }
-            $rows = json_encode($rows, JSON_UNESCAPED_UNICODE);
-        } else {
-            $employee = null;
+            $filenames = json_encode($filename, JSON_UNESCAPED_UNICODE);
+            $bestservices->image = $filenames;
         }
 
+        $title = request()->input('title');
+        $content = request()->input('content');
+        $button = request()->input('button');
+        
+        $header = request()->input('header');
 
-        $bestservices = BestServices::latest()->first();
+        $header = json_encode($header, JSON_UNESCAPED_UNICODE);
+        $bestservices->header = $header;
 
         $bestservices->title = $title;
         $bestservices->content = $content;
-        $bestservices->rows = $rows;
         $bestservices->button = $button;
 
         $bestservices->save();
 
-        return redirect('dashboard/dynamic-edit/best-services');
+        return redirect('dashboard/dynamic-edit/best-services')->with('store',"Best Service eklendi");
+
+
     }
+
+    function update($id)
+    {
+        $bestservices = BestServices::find($id);
+        $oldImages =request()->old_image;
+
+        dd($oldImages);
+
+        if(request()->hasfile('image'))
+        {
+            $files = request()->file('image');
+            foreach($files as $file)
+            {
+                $filename[] = $file->getClientOriginalName();
+                // $file->movKe('admin/bestServicesImage',$file->getClientOriginalName());
+            }
+            dd($filename);
+            $filenames = json_encode($filename, JSON_UNESCAPED_UNICODE);
+            $bestservices->image = $filenames;
+        }
+    }
+
 
     public static function hasRecord()
     {

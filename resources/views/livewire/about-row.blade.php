@@ -21,21 +21,22 @@
 
             <div class="row">
                 @php
-                $rows = json_decode($record->rows, TRUE);
+                    $header = json_decode($record->header, TRUE);
+                    $icon = json_decode($record->icon, TRUE);
+                    $paragraph = json_decode($record->paragraph, TRUE);
                 @endphp
-                @foreach($rows as $row)
+                @foreach($header as $key=>$single)
                     <div class="col-md-4">
                         <div class="themesflat-spacer clearfix" data-desktop="0" data-mobile="0" data-smobile="35"></div>
                         <div class="themesflat-content-box clearfix" data-margin="0 5px 0 5px" data-mobilemargin="0 0 0 0">
                             <div class="themesflat-icon-box icon-top align-center has-width w95 circle light-bg accent-color style-1 clearfix">
                                 <div class="icon-wrap">
-                                    {{$row['icon']}}
-                                    <!-- <i class="autora-icon-time"></i> -->
+                                    <i class="{{$icon[$key]}}"></i>
                                 </div>
                                 <div class="text-wrap">
-                                    <h5 class="heading"><a href="#">{{$row['header']}}</a></h5>
+                                    <h5 class="heading"><a href="#">{{$single}}</a></h5>
                                     <div class="sep clearfix"></div>
-                                    <p class="sub-heading">{{$row['paragraph']}}</p>
+                                    <p class="sub-heading">{{$paragraph[$key]}}</p>
                                 </div>
                             </div><!-- /.themesflat-icon-box -->
                         </div><!-- /.themesflat-content-box -->

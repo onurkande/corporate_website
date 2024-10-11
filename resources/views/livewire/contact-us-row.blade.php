@@ -21,17 +21,19 @@
 
             <div class="row gutter-16">
                 @php
-                    $rows = json_decode($record->rows, TRUE);
+                    $header = json_decode($record->header, TRUE);
+                    $paragraph = json_decode($record->paragraph, TRUE);
+                    $icon = json_decode($record->icon, TRUE);
                 @endphp
-                @foreach($rows as $row)
+                @foreach($header as $key=>$single)
                     <div class="col-md-4">
                         <div class="themesflat-icon-box icon-top align-center  accent-color style-3 bg-light-snow clearfix">
                             <div class="icon-wrap">
-                                {{$row['icon']}}
+                                <i class="{{$icon[$key]}}"></i>
                             </div>
                             <div class="text-wrap">
-                                <h5 class="heading"><a href="#">{{$row['header']}}</a></h5>
-                                <p class="sub-heading">{{$row['paragraph']}}</p>
+                                <h5 class="heading"><a href="#">{{$single}}</a></h5>
+                                <p class="sub-heading">{{$paragraph[$key]}}</p>
                             </div>
                         </div><!-- /.themesflat-icon-box -->
                     </div><!-- /.col --> 

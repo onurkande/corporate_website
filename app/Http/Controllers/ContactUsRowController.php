@@ -21,89 +21,62 @@ class ContactUsRowController extends Controller
 
     function store()
     {
+        $contactusrow=new ContactUsRow;
+
         $title = request()->input('title');
         $content = request()->input('content');
         $header = request()->input('header');
         $paragraph = request()->input('paragraph');
         $icon = request()->input('icon');
-
-
-        if($header != null or $paragraph != null or $icon != null)
-        {
-            $rows=[
-                $header=>[
-                    "header" => $header,
-                    "paragraph" => $paragraph,
-                    'icon' => $icon
-                ]
-            ];
-
-            $rows=json_encode($rows,JSON_UNESCAPED_UNICODE);
-
-            //dd($rows);
         
-        }
-        else
-        {
-            $rows = null;
-        }
+        $icon = json_encode($icon, JSON_UNESCAPED_UNICODE);
+        $contactusrow->icon = $icon;
 
-        $contactusrow=new ContactUsRow;
+        $header = json_encode($header, JSON_UNESCAPED_UNICODE);
+        $contactusrow->header = $header;
+
+        $paragraph = json_encode($paragraph, JSON_UNESCAPED_UNICODE);
+        $contactusrow->paragraph = $paragraph;
+
+
         $contactusrow->title=$title;
         $contactusrow->content=$content;
-        $contactusrow->rows = $rows;
 
         $contactusrow->save();
 
-        return redirect('dashboard/dynamic-edit/contact-us-row');
+        return redirect('dashboard/dynamic-edit/contact-us-row')->with('store',"Contact Us Row eklendi");
     }
 
-    function update()
+    function update($id)
     {
+        $contactusrow = ContactUsRow::find($id);
         $title = request()->input('title');
         $content = request()->input('content');
         $header = request()->input('header');
         $paragraph = request()->input('paragraph');
         $icon = request()->input('icon');
 
-        $allRows = [$header, $paragraph];
-        if($header != null or $paragraph != null or $icon != null)
-        {
-            $rowsCount = count($header);
-            $index = 0;
-            $rows = [];
-            while($index < $rowsCount){
-                $rows[$header[$index]] = [
-                    "header" => $header[$index],
-                    "paragraph" => $paragraph[$index],
-                    "icon" => $icon[$index]
-                ];
-                $index++;
-            }
-            $rows=json_encode($rows,JSON_UNESCAPED_UNICODE);
-        
-        }
-        else
-        {
-            $rows = null;
-        }
+        $icon = json_encode($icon, JSON_UNESCAPED_UNICODE);
+        $contactusrow->icon = $icon;
 
-        $contactusrow = new ContactUsRow;
-        $contactusrow = $contactusrow::find(1);
+        $header = json_encode($header, JSON_UNESCAPED_UNICODE);
+        $contactusrow->header = $header;
+
+        $paragraph = json_encode($paragraph, JSON_UNESCAPED_UNICODE);
+        $contactusrow->paragraph = $paragraph;
+
 
         $contactusrow->title = $title;
         $contactusrow->content = $content;
-        $contactusrow->rows = $rows;
  
         $contactusrow->save();
 
-        return redirect('dashboard/dynamic-edit/contact-us-row');
+        return redirect('dashboard/dynamic-edit/contact-us-row')->with('update',"Contact Us Row güncellendi");
     }
 
     public static function hasRecord()
     {
-        $contactusrow=new ContactUsRow;
-        $contactusrow = $contactusrow::find(1);
+        $contactusrow= ContactUsRow::latest()->first();
         if($contactusrow)
         {
             return $contactusrow;   
@@ -114,26 +87,40 @@ class ContactUsRowController extends Controller
         }
     }
 
-    function delete()
+    function delete($id)
     {
-        $contactusrow = new ContactUsRow;
-        $contactusrow = ContactUsRow::find(1);
-        $rows=json_decode($contactusrow->rows, TRUE);
-        if(array_key_exists(request()->all()["header"],$rows))
-        {
-            unset($rows[request()->all()["header"]]);
-            // dd($rows);
+        $contactusrow = ContactUsRow::first(); 
 
-            $rows=json_encode($rows,JSON_UNESCAPED_UNICODE);
-            $contactusrow->rows = $rows;
-     
+        $header = json_decode($contactusrow->header, TRUE);
+        $paragraph = json_decode($contactusrow->paragraph, TRUE);
+        $icon = json_decode($contactusrow->icon, TRUE);
+
+        $index = array_search($id, $header);
+
+        if($header[$index] && $paragraph[$index] && $icon[$index])
+        {
+            unset($header[$index]);
+            unset($paragraph[$index]);
+            unset($icon[$index]);
+            
+            $contactusrow->header = json_encode(array_values($header), JSON_UNESCAPED_UNICODE);
+            $contactusrow->paragraph = json_encode(array_values($paragraph), JSON_UNESCAPED_UNICODE);
+            $contactusrow->icon = json_encode(array_values($icon), JSON_UNESCAPED_UNICODE);
+
             $contactusrow->save();
 
-        }
+            return redirect('dashboard/dynamic-edit/contact-us-row')->with('delete', "rows silindi");
+        } 
         else
         {
-            echo "Key does not exist!";
+            return redirect('dashboard/dynamic-edit/contact-us-row')->with('delete', "Değer dizide bulunamadı.");
         }
-        
+    }
+
+    function allDelete($id)
+    {
+        $contactusrow = ContactUsRow::find($id);
+        $contactusrow->delete();
+        return redirect('dashboard/dynamic-edit/contact-us-row')->with('delete',"Contact Us Row silindi");
     }
 }

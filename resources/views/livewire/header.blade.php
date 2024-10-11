@@ -44,34 +44,34 @@
 
                 <nav id="main-nav" class="main-nav">
                     <ul id="menu-primary-menu" class="menu">
-                        <li class="menu-item menu-item-has-children current-menu-item">
+                        <li class="menu-item menu-item-has-children {{ request()->is('/') ? 'current-menu-item' : '' }}">
                             <a href="/">HOME</a>
                         </li>
-                        <li class="menu-item menu-item-has-children">
-                            <a href="about">ABOUT US </a>
+                        <li class="menu-item menu-item-has-children {{ request()->is('about') ? 'current-menu-item' : '' }}">
+                            <a href="/about">ABOUT US </a>
                         </li>
-                        <li class="menu-item menu-item-has-children">
-                            <a href="services">SERVICES</a>
+                        <li class="menu-item menu-item-has-children {{ request()->is('services*') ? 'current-menu-item' : '' }}">
+                            <a href="/services">SERVICES</a>
                             <ul class="sub-menu">
-                                <li class="menu-item"><a href="service">SERVICES DETAIL</a></li>
+                                <li class="menu-item {{ request()->is('service') ? 'current-menu-item' : '' }}"><a href="/service">SERVICES DETAIL</a></li>
                             </ul>
                         </li>
-                        <li class="menu-item menu-item-has-children">
-                            <a href="projects">PROJECTS</a>
+                        <li class="menu-item menu-item-has-children {{ request()->is('projects*') ? 'current-menu-item' : '' }}">
+                            <a href="/projects">PROJECTS</a>
                             <ul class="sub-menu">
-                                <li class="menu-item"><a href="project">PROJECTS DETAIL</a></li>
+                                <li class="menu-item {{ request()->is('project') ? 'current-menu-item' : '' }}"><a href="/project">PROJECTS DETAIL</a></li>
                             </ul>
                         </li>
-                        <li class="menu-item menu-item-has-children">
-                            <a href="blogs">BLOG</a>
+                        <li class="menu-item menu-item-has-children {{ request()->is('blogs*') ? 'current-menu-item' : '' }}">
+                            <a href="/blogs">BLOG</a>
                             <ul class="sub-menu right-sub-menu">
-                                <li class="menu-item"><a href="blog-single">BLOG SINGLE</a></li>
+                                <li class="menu-item {{ request()->is('blog-single') ? 'current-menu-item' : '' }}"><a href="/blog-single">BLOG SINGLE</a></li>
                             </ul>
                         </li>
-                        <li class="menu-item menu-item-has-children">
-                            <a href="contact">CONTACT</a>
+                        <li class="menu-item menu-item-has-children {{ request()->is('contact') ? 'current-menu-item' : '' }}">
+                            <a href="/contact">CONTACT</a>
                         </li>
-                    </ul>
+                    </ul>                    
                 </nav><!-- /#main-nav -->
 
                 <div id="header-search">

@@ -21,35 +21,38 @@ class ContactUsLineController extends Controller
 
     function store()
     {
+        $contactusline = new ContactUsLine;
+
         $title = request()->input('title');
         $number = request()->input('number');
 
-        $contactusline = new ContactUsLine;
         $contactusline->title = $title;
         $contactusline->number = $number;
+
         $contactusline->save();
 
-        return redirect('dashboard/dynamic-edit/contact-us-line');
+        return redirect('dashboard/dynamic-edit/contact-us-line')->with('store', 'Contact Us Line eklendi');
     }
 
-    function update()
+    function update($id)
     {
+        $contactusline = ContactUsLine::find($id);
+
         $title = request()->input('title');
         $number = request()->input('number');
 
-        $contactusline = new ContactUsLine;
-        $contactusline = $contactusline::find(1);
         $contactusline->title = $title;
         $contactusline->number = $number;
+
         $contactusline->save();
 
-        return redirect('dashboard/dynamic-edit/contact-us-line');
+        return redirect('dashboard/dynamic-edit/contact-us-line')->with('update', 'Contact Us Line güncellendi');
     }
 
     public static function hasRecord()
     {
         $contactusline = new ContactUsLine;
-        $contactusline = $contactusline::find(1);
+        $contactusline = $contactusline::latest()->first();
         if($contactusline)
         {
             return $contactusline;
@@ -58,5 +61,12 @@ class ContactUsLineController extends Controller
         {
             return $contactusline;
         }
+    }
+
+    function delete($id)
+    {
+        $contactusline = ContactUsLine::find($id);
+        $contactusline->delete();
+        return redirect('dashboard/dynamic-edit/contact-us-line')->with('delete', 'Contact Us Line silindi');
     }
 }

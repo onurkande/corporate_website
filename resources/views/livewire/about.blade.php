@@ -4,7 +4,7 @@
             <div class="row equalize sm-equalize-auto">
                 <div class="col-md-6 half-background style-1">
                     {{-- <img src="/storage/images/{{$record->image}}"> --}}
-                    <img src="/images/{{$record->image}}">
+                    <img src="{{asset('admin/aboutImage/'.$record->image)}}">
                 </div><!-- /.col-md-6 -->
                 <div class="col-md-6 bg-light-grey">
                     <div class="themesflat-spacer clearfix" data-desktop="64" data-mobile="60" data-smobile="60"></div>

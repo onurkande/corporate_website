@@ -1,199 +1,237 @@
 @extends('layouts.dynamic')
 @section('title','BEST SERVİCES')
 @section('content')
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+    @if(session()->has('store'))
+        <div class="alert alert-success" role="alert">
+            {{ session()->get('store') }}
+        </div>
+        <script>
+            setTimeout(function() {
+                $('.alert').fadeOut();
+            }, 5000);
+        </script>
+    @endif
+
+    @if(session()->has('update'))
+        <div class="alert alert-info" role="alert">
+            {{ session()->get('update') }}
+        </div>
+        <script>
+            setTimeout(function() {
+                $('.alert').fadeOut();
+            }, 5000);
+        </script>
+    @endif
+
+    @if(session()->has('delete'))
+        <div class="alert alert-danger" role="alert">
+            {{ session()->get('delete') }}
+        </div>
+        <script>
+            setTimeout(function() {
+                $('.alert').fadeOut();
+            }, 5000);
+        </script>
+    @endif
+    <div class="card" style="padding: 0">
+        <div class="card-header">
+            <h4>Best Services</h4>
+        </div>
+        <div class="card-body">
 
             @if($record)
-                <form action="bestServices-update" method="post" enctype="multipart/form-data">
+                <form method="post" enctype="multipart/form-data" action="{{url('dashboard/dynamic-edit/bestServices-update/'.$record->id)}}">
                     @csrf
-                    <label>title</label>
-                    <input type="text" name="title" value="{{$record->title}}">
-                    <br>
-                    <label>content</label>
-                    <input type="text" name="content" value="{{$record->content}}">
-                    <br>
-                    <label>button</label>
-                    <input type="text" name="button" value="{{$record->button}}">
-                    @if($record->rows != null)
-                        @php
-                            $rows=json_decode($record->rows, TRUE);
-                        @endphp
 
-                        @foreach($rows as $row)
-                            <br>
-                            <br>
-                            <div >
-                                <input type="text" name="header[]" value="{{$row['header']}}"><br>
-                                <img style="width:250px" src="{{ asset('images/' . $row['image']) }}">
-                                <input type="hidden" name="oldImage[]" value="{{$row['image']}}">
-                                <input type="file" name="image[]">
-                                <a href="{{route('bestServices-delete', ['header'=>$row['header']])}}"> sil </a>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="">Title :</label>
+                            <input type="text" name="title" class="form-control" value="{{$record->title}}">
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="">Content :</label>
+                            <input type="text" name="content" class="form-control" value="{{$record->content}}">
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="">Button :</label>
+                            <input type="text" name="button" class="form-control" value="{{$record->button}}">
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class="row">
+                            
+                        <div class="col-md-6">
+                            <label>Header :</label>
+                            @php
+                                $header = json_decode($record->header, TRUE);
+                            @endphp
+                            <div class="row">
+                                @foreach($header as $single)
+                                <div class="col-md-1">
+                                    <a href="{{url('dashboard/dynamic-edit/bestServices-delete/'.$single)}}"><button class="btn-danger" type="button">Sil</button></a>
+                                </div>
+                                <div class="col-md-11">
+                                    <input type="text" name="header[]" class="form-control" value="{{$single}}" oninput="checkInputRowsValues()">
+                                </div>
+                                @endforeach
                             </div>
-                        @endforeach
-                        <hr>
-                        <section id="more-rows">
-
-                        </section>
-                    @else
-                        <label>header</label>
-                        <input type="text" name="header[]">
-                        <br>
-                        <label>image</label>
-                        <input type="file" name="image[]">
-                        <section id="more-rows">
-
-                        </section>
-                    @endif
-                    <br>
-                    <div>
-                         <a onclick="addRows()">+</a>
-                        <a onclick="removeRows()">-</a>
-                    </div>
-
-                    <!-- Trigger/Open The Modal -->
-                <a id="myBtn">Open Modal</a>
-                <!-- The Modal -->
-                <div id="myModal" class="modal">
-                    <!-- Modal content -->
-                    <div class="modal-content">
-                    <span class="close">&times;</span>
-                    {{-- <p>Some text in the Modal..</p> --}}
-
-                        @php
-                            $images = glob('./storage/images/bestServices/*.*');
-                        @endphp
-                        @foreach ($images as $image)
-                            <img style="width:250px" src="{{ltrim($image, '.')}}">
-                            <label>{{ltrim($image, './storage/images/bestServices/')}}</label>
-                            <input type="radio" name="radiobutton[]" value="{{ltrim($image, '.')}}">
+                            <section id="more-header">
+                            </section>
                             <br>
-                        @endforeach
+                            <div>
+                                <a onclick="addRows()"><button type="button">+</button></a>
+                                <a onclick="removeRows()"><button type="button">-</button></a>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            @php
+                                $images = json_decode($record->image, TRUE);
+                            @endphp
+                            @foreach($images as $index => $single)
+                                <img src="{{asset('admin/bestServicesImage/'.$single)}}" width="300">
+                                <input type="file" name="image[]" class="form-control" style="margin-bottom: 1rem">
+                                <input type="hidden" name="old_image[{{$index}}]" value="{{$single}}">
+                            @endforeach
+                            <section id="more-paragraph">
+                            </section>
+                        </div>
+                    
                     </div>
-                </div>
-                
-                <br>
-                <br>
 
-                    <input type="submit" value="güncelle">
+                    <br>
+
+                    <div class="row mt-3">
+                        <div class="col-md-8">
+                            <button type="submit" class="btn btn-primary btn-lg btn-block" style="display: block; width: 100%;">Update</button>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="{{url('dashboard/dynamic-edit/allAboutRow-delete/'.$record->id)}}"><button class="btn-danger btn-lg" type="button">About Row Delete</button></a>
+                        </div>
+                    </div>
                 </form>
 
             @else
-                <form method="post" enctype="multipart/form-data">
+                <form method="post" enctype="multipart/form-data" action="{{url('dashboard/dynamic-edit/best-services-insert')}}">
                     @csrf
-                    <label>title</label>
-                    <input type="text" name="title">
-                    <br>
-                    <label>content</label>
-                    <input type="text" name="content">
-                    <br>
-                    <label>header</label>
-                    <input type="text" name="header">
-                    <br>
-                    <label>image</label>
-                    <input type="file" name="image">
-                    <br>
-                    <label>button</label>
-                    <input type="text" name="button">
-                    <br>
-                    <input type="submit" value="kaydet">
-                    <br>
-                    <section id="more-rows">
 
-                    </section>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="">Title :</label>
+                            <input type="text" name="title" class="form-control">
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="">Content :</label>
+                            <input type="text" name="content" class="form-control">
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="">Button :</label>
+                            <input type="text" name="button" class="form-control">
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Header :</label>
+                            <input type="text" name="header[]" class="form-control" oninput="checkInputRowsValues()">
+                            <section id="more-header">
+                            </section>
+                            <br>
+                            <div>
+                                <a onclick="addRows()"><button type="button">+</button></a>
+                                <a onclick="removeRows()"><button type="button">-</button></a>
+                            </div> 
+                        </div>
+                        <div class="col-md-6">
+                            <label>Image :</label>
+                            <input type="file" name="image[]" class="form-control" oninput="checkInputRowsValues()">
+                            <section id="more-image">
+                            </section>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class="row mt-3">
+                        <div class="col-md-8">
+                            <button type="submit" class="btn btn-primary btn-lg btn-block" style="display: block; width: 100%;">Submit</button>
+                        </div>
+                    </div>
                 </form>
             @endif
 
-            </div>
         </div>
     </div>
 
     <script>
-        function addRows()
+        function addRows() 
         {
-            const moreRows = document.getElementById('more-rows');
-            const row = document.createElement("div");
-            row.innerHTML = '<div><input type="text" name="header[]" required><input type="file" name="image[]" required></div>';
-            moreRows.appendChild(row);
+            const moreHeader = document.getElementById('more-header');
+            const moreImage = document.getElementById('more-image');
+
+            const headerRow = document.createElement("div");
+            headerRow.innerHTML = '<input type="text" class="form-control" name="header[]" oninput="checkInputRowsValues()" required>';
+            moreHeader.appendChild(headerRow);
+
+            const imageRow = document.createElement("div");
+            imageRow.innerHTML = '<input type="file" class="form-control" name="image[]" oninput="checkInputRowsValues()" required>';
+            moreImage.appendChild(imageRow);
         }
 
-        function removeRows()
+        function removeRows() 
         {
-            const rowsSection = document.getElementById("more-rows");
-            const lastRows = rowsSection.querySelector("div:last-child");
-            lastRows.parentElement.removeChild(lastRows);
+            const headerSection = document.getElementById("more-header");
+            const imageSection = document.getElementById("more-image");
+
+            if (headerSection.children.length > 0) {
+                headerSection.removeChild(headerSection.lastElementChild);
+            }
+
+            if (imageSection.children.length > 0) {
+                imageSection.removeChild(imageSection.lastElementChild);
+            }
+        }
+
+        function checkInputRowsValues() 
+        {
+            const headerInputs = document.querySelectorAll('input[name="header[]"]');
+            const imageInputs = document.querySelectorAll('input[name="image[]"]');
+
+            headerInputs.forEach((headerInput, index) => {
+                const imageInput = imageInputs[index];
+
+                if (headerInput.value !== '' && imageInput.value === '') {
+                    imageInput.setCustomValidity('Please fill in the image');
+                } else if (headerInput.value === '' && imageInput.value !== '') {
+                    headerInput.setCustomValidity('Please fill in the header');
+                } else {
+                    headerInput.setCustomValidity('');
+                    imageInput.setCustomValidity('');
+                }
+            });
         }
     </script>
-
-    <script>
-        // Get the modal
-        var modal = document.getElementById("myModal");
-
-        // Get the button that opens the modal
-        var btn = document.getElementById("myBtn");
-
-        // Get the <span> element that closes the modal
-        var span = document.getElementsByClassName("close")[0];
-
-        // When the user clicks the button, open the modal
-        btn.onclick = function() {
-        modal.style.display = "block";
-        }
-
-        // When the user clicks on <span> (x), close the modal
-        span.onclick = function() {
-        modal.style.display = "none";
-        }
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-        }
-    </script>
-
-    <style>
-        body {font-family: Arial, Helvetica, sans-serif;}
-
-        /* The Modal (background) */
-        .modal {
-        display: none; /* Hidden by default */
-        position: fixed; /* Stay in place */
-        z-index: 1; /* Sit on top */
-        padding-top: 100px; /* Location of the box */
-        left: 0;
-        top: 0;
-        width: 100%; /* Full width */
-        height: 100%; /* Full height */
-        overflow: auto; /* Enable scroll if needed */
-        background-color: rgb(0,0,0); /* Fallback color */
-        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-        }
-
-        /* Modal Content */
-        .modal-content {
-        background-color: #fefefe;
-        margin: auto;
-        padding: 20px;
-        border: 1px solid #888;
-        width: 80%;
-        }
-
-        /* The Close Button */
-        .close {
-        color: #aaaaaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-        color: #000;
-        text-decoration: none;
-        cursor: pointer;
-        }
-    </style>
 @endsection

@@ -16,7 +16,8 @@ return new class extends Migration
         Schema::create('consult_with_us', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->json('rows');
+            $table->longText('content')->nullable();
+            $table->json('header')->nullable();
             $table->timestamps();
         });
     }

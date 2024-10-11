@@ -21,66 +21,66 @@ class AboutRowController extends Controller
 
     function store()
     {
-        $title = request()->input('title');
-        $content = request()->input('content');
-        $icon = request()->input('icon');
-        $header = request()->input('header');
-        $paragraph = request()->input('paragraph');
-
-        $rows = [
-            'header' => [
-                'icon' => $icon,
-                'header' => $header,
-                'paragraph' => $paragraph
-            ]
-        ];
-        $rows = json_encode($rows, JSON_UNESCAPED_UNICODE);
-
         $aboutrows = new AboutRow;
-        $aboutrows->title = $title;
-        $aboutrows->content = $content;
-        $aboutrows->rows = $rows;
-        $aboutrows->save();
 
-        return redirect('dashboard/dynamic-edit/about-row');
-    }
-
-    function update()
-    {
         $title = request()->input('title');
         $content = request()->input('content');
         $icon = request()->input('icon');
         $header = request()->input('header');
         $paragraph = request()->input('paragraph');
-        $allRows = [$icon, $header, $paragraph];
-        if ($icon != null or $header != null or $paragraph != null) {
-            $rowsCount = count($header);
-            $index = 0;
-            $rows = [];
-            while ($index < $rowsCount) {
-                $rows[$header[$index]] = [
-                    "icon" => $icon[$index],
-                    "header" => $header[$index],
-                    "paragraph" => $paragraph[$index]
-                ];
-                $index++;
-            }
-            $rows = json_encode($rows, JSON_UNESCAPED_UNICODE);
 
-        } else {
-            $rows = null;
-        }
+        $icon = json_encode($icon, JSON_UNESCAPED_UNICODE);
+        $aboutrows->icon = $icon;
 
-        $aboutrows = $aboutrows::latest()->first();
+        $header = json_encode($header, JSON_UNESCAPED_UNICODE);
+        $aboutrows->header = $header;
+
+        $paragraph = json_encode($paragraph, JSON_UNESCAPED_UNICODE);
+        $aboutrows->paragraph = $paragraph;
 
         $aboutrows->title = $title;
         $aboutrows->content = $content;
-        $aboutrows->rows = $rows;
-
         $aboutrows->save();
 
-        return redirect('dashboard/dynamic-edit/about-row');
+        return redirect('dashboard/dynamic-edit/about-row')->with('store',"About Row eklendi");
     }
+
+    function update($id)
+    {
+        // Var olan AboutRow kaydını bul
+        $aboutrows = AboutRow::find($id);
+    
+        // Eğer kayıt bulunamazsa, hata mesajı ile geri dön
+        if (!$aboutrows) {
+            return redirect('dashboard/dynamic-edit/about-row')->with('delete', "About Row bulunamadı");
+        }
+    
+        // Formdan gelen verileri al
+        $title = request()->input('title');
+        $content = request()->input('content');
+        $icon = request()->input('icon');
+        $header = request()->input('header');
+        $paragraph = request()->input('paragraph');
+    
+        // Verileri JSON formatına dönüştür
+        $icon = json_encode($icon, JSON_UNESCAPED_UNICODE);
+        $header = json_encode($header, JSON_UNESCAPED_UNICODE);
+        $paragraph = json_encode($paragraph, JSON_UNESCAPED_UNICODE);
+    
+        // Kayıt verilerini güncelle
+        $aboutrows->title = $title;
+        $aboutrows->content = $content;
+        $aboutrows->icon = $icon;
+        $aboutrows->header = $header;
+        $aboutrows->paragraph = $paragraph;
+    
+        // Güncellenmiş kaydı veritabanına kaydet
+        $aboutrows->save();
+    
+        // Başarı mesajı ile yönlendir
+        return redirect('dashboard/dynamic-edit/about-row')->with('update', "About Row güncellendi");
+    }
+    
 
     function hasRecord()
     {
@@ -92,23 +92,40 @@ class AboutRowController extends Controller
         }
     }
 
-    function delete()
+    function delete($id)
     {
-        $aboutrows = new AboutRow;
-        $aboutrows = AboutRow::find(1);
-        $rows = json_decode($aboutrows->rows, TRUE);
-        if (array_key_exists(request()->all()["header"], $rows)) {
-            unset($rows[request()->all()["header"]]);
-            // dd($rows);
+        $aboutrows = AboutRow::first();
+        $header = json_decode($aboutrows->header, TRUE);
+        $paragraph = json_decode($aboutrows->paragraph, TRUE);
+        $icon = json_decode($aboutrows->icon, TRUE);
 
-            $rows = json_encode($rows, JSON_UNESCAPED_UNICODE);
-            $aboutrows->rows = $rows;
+        $index = array_search($id, $header);
+
+        if($header[$index] && $paragraph[$index] && $icon[$index])
+        {
+            unset($header[$index]);
+            unset($paragraph[$index]);
+            unset($icon[$index]);
+            
+            $aboutrows->header = json_encode(array_values($header), JSON_UNESCAPED_UNICODE);
+            $aboutrows->paragraph = json_encode(array_values($paragraph), JSON_UNESCAPED_UNICODE);
+            $aboutrows->icon = json_encode(array_values($icon), JSON_UNESCAPED_UNICODE);
 
             $aboutrows->save();
 
-        } else {
-            echo "Key does not exist!";
+            return redirect('dashboard/dynamic-edit/about-row')->with('delete', "rows silindi");
+        } 
+        else
+        {
+            return redirect('dashboard/dynamic-edit/about-row')->with('delete', "Değer dizide bulunamadı.");
         }
 
+    }
+
+    function allDelete($id)
+    {
+        $aboutrows = AboutRow::find($id);
+        $aboutrows->delete();
+        return redirect('dashboard/dynamic-edit/about-row')->with('delete', "About Row silindi");
     }
 }

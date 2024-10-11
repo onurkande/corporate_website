@@ -48,14 +48,32 @@
 
     <br>
 
-    <form method="post">
-        @csrf
-        <label>title2</label>
-        <input type="text" name="title2"><br>
-        <label>tag</label>
-        <input type="text" name="tag"><br>
-        <input type="submit" value="kaydet">
-    </form>
+    @if ($tagRecord)
+        <form method="post">
+            @csrf
+            <label>title2</label>
+            <input type="text" name="title2"><br>
+        @if($infoRecord->inforows != null)
+                @php
+                    $inforows=json_decode($infoRecord->inforows, TRUE);
+                @endphp
+                
+                @foreach($inforows as $inforow)
+                @endforeach
+            <label>tag</label>
+            <input type="text" name="tag[]"><br>
+            <input type="submit" value="güncelle">
+        </form>
+    @else
+        <form method="post">
+            @csrf
+            <label>title2</label>
+            <input type="text" name="title2"><br>
+            <label>tag</label>
+            <input type="text" name="tag"><br>
+            <input type="submit" value="kaydet">
+        </form>
+    @endif
 
     <br>
 

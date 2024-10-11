@@ -1,30 +1,104 @@
 @extends('layouts.dynamic')
 @section('title','CONTACT US LİNE')
 @section('content')
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+    @if(session()->has('store'))
+        <div class="alert alert-success" role="alert">
+            {{ session()->get('store') }}
+        </div>
+        <script>
+            setTimeout(function() {
+                $('.alert').fadeOut();
+            }, 5000);
+        </script>
+    @endif
+
+    @if(session()->has('update'))
+        <div class="alert alert-info" role="alert">
+            {{ session()->get('update') }}
+        </div>
+        <script>
+            setTimeout(function() {
+                $('.alert').fadeOut();
+            }, 5000);
+        </script>
+    @endif
+
+    @if(session()->has('delete'))
+        <div class="alert alert-danger" role="alert">
+            {{ session()->get('delete') }}
+        </div>
+        <script>
+            setTimeout(function() {
+                $('.alert').fadeOut();
+            }, 5000);
+        </script>
+    @endif
+    <div class="card" style="padding: 0">
+        <div class="card-header">
+            <h4>Contact Us Line</h4>
+        </div>
+        <div class="card-body">
 
                 @if($record)
-                    <form action="ContactUsLine-update" method="post">
+                    <form action="{{url('dashboard/dynamic-edit/ContactUsLine-update/'.$record->id)}}" method="post">
                         @csrf
-                        <input type="text" name="title" value="{{$record->title}}">
-                        <input type="text" name="number" value="{{$record->number}}">
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="">Title :</label>
+                                <input type="text" name="title" class="form-control" value="{{$record->title}}">
+                            </div>
+                        </div>
+
                         <br>
-                        <input type="submit" value="güncelle">
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="">Number :</label>
+                                <input type="text" name="number" class="form-control" value="{{$record->number}}">
+                            </div>
+                        </div>
+
+                        <br>
+                        
+                        <div class="row mt-3">
+                            <div class="col-md-8">
+                                <button type="submit" class="btn btn-primary btn-lg btn-block" style="display: block; width: 100%;">Güncelle</button>
+                            </div>
+                            <div class="col-md-4">
+                                <a href="{{url('dashboard/dynamic-edit/ContactUsLine-delete/'.$record->id)}}"><button class="btn-danger btn-lg" type="button">Contact Us Line Delete</button></a>
+                            </div>
+                        </div>
                     </form>
                 @else
-                    <form method="post">
+                    <form action="{{url('dashboard/dynamic-edit/ContactUsLine-insert')}}" method="post">
                         @csrf
-                        <input type="text" name="title">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="">Title :</label>
+                                <input type="text" name="title" class="form-control">
+                            </div>
+                        </div>
+                        
                         <br>
-                        <input type="text" name="number">
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="">Number :</label>
+                                <input type="text" name="number" class="form-control">
+                            </div>
+                        </div>
+
                         <br>
-                        <input type="submit" value="kaydet">
+
+                        <div class="row mt-3">
+                            <div class="col-md-8">
+                                <button type="submit" class="btn btn-primary btn-lg btn-block" style="display: block; width: 100%;">Kaydet</button>
+                            </div>
+                        </div>
                     </form>
                 @endif
 		        
-            </div>
         </div>
     </div>
 @endsection
