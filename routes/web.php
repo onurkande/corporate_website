@@ -76,3 +76,9 @@ Route::get('/deneme', function () {
 Route::get('test',function (){
     return public_path('');
 });
+
+Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

@@ -1,3 +1,13 @@
+@if(session()->has('status'))
+    <div class="alert alert-danger" role="alert">
+        {{ session()->get('status') }}
+    </div>
+    <script>
+        setTimeout(function() {
+            $('.alert').fadeOut();
+        }, 5000);
+    </script>
+@endif
 <!DOCTYPE html>
 <!--[if IE 8 ]><html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US"> <![endif]-->
 <!--[if (gte IE 9)|!(IE)]><!--><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr-TR" lang="tr-TR"><!--<![endif]-->

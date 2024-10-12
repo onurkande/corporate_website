@@ -12,10 +12,10 @@ class FooterController extends Controller
     function index()
     {
         $infoRecord = $this->infohasRecord();
-        $tagsRecord = $this->taghasRecord();
+        // $tagsRecord = $this->taghasRecord();
         $imageRecord = $this->imagehasRecord();
         $title4Record = $this->title4hasRecord();
-        return view('dynamic.footer',['infoRecord'=>$infoRecord,'tagsRecord'=>$tagsRecord,'imageRecord'=>$imageRecord,'title4Record'=>$title4Record]);
+        return view('dynamic.footer',['infoRecord'=>$infoRecord,'imageRecord'=>$imageRecord,'title4Record'=>$title4Record]);
     }
 
 
