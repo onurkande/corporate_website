@@ -32,6 +32,7 @@
     <hr class="horizontal light mt-0 mb-2">
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
       <ul class="navbar-nav">
+
         <li class="nav-item">
           <a class="nav-link text-white {{ Request::is('dashboard/dynamic-edit') ? 'active bg-gradient-primary':'' }}" href="{{url('dashboard/dynamic-edit')}}">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -40,6 +41,7 @@
             <span class="nav-link-text ms-1">Dashboard</span>
           </a>
         </li>
+
         <li class="nav-item">
           <a class="nav-link text-white {{ Request::is('dashboard/dynamic-edit/header') ? 'active bg-gradient-primary':'' }}" href="{{url('dashboard/dynamic-edit/header')}}">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -48,6 +50,7 @@
             <span class="nav-link-text ms-1">Header</span>
           </a>
         </li>
+
         <li class="nav-item">
           <a class="nav-link text-white {{ Request::is('dashboard/dynamic-edit/footer') ? 'active bg-gradient-primary':'' }}" href="{{url('dashboard/dynamic-edit/footer')}}">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -56,6 +59,7 @@
             <span class="nav-link-text ms-1">Footer</span>
           </a>
         </li>
+
         <li class="nav-item">
           <a class="nav-link text-white {{ Request::is('dashboard/dynamic-edit/about-row') ? 'active bg-gradient-primary':'' }}" href="{{url('dashboard/dynamic-edit/about-row')}}">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -64,6 +68,7 @@
             <span class="nav-link-text ms-1">About Rows</span>
           </a>
         </li>
+
         <li class="nav-item">
           <a class="nav-link text-white {{ Request::is('dashboard/dynamic-edit/about') ? 'active bg-gradient-primary':'' }}" href="{{url('dashboard/dynamic-edit/about')}}">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -72,6 +77,7 @@
             <span class="nav-link-text ms-1">About</span>
           </a>
         </li>
+
         <li class="nav-item">
           <a class="nav-link text-white {{ Request::is('dashboard/dynamic-edit/best-services') ? 'active bg-gradient-primary':'' }}" href="{{url('dashboard/dynamic-edit/best-services')}}">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -80,6 +86,7 @@
             <span class="nav-link-text ms-1">Best Services</span>
           </a>
         </li>
+
         <li class="nav-item">
           <a class="nav-link text-white {{ Request::is('dashboard/dynamic-edit/consult-with-us') ? 'active bg-gradient-primary':'' }}" href="{{url('dashboard/dynamic-edit/consult-with-us')}}">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -88,6 +95,7 @@
             <span class="nav-link-text ms-1">Consult With Us</span>
           </a>
         </li>
+
         <li class="nav-item">
           <a class="nav-link text-white {{ Request::is('dashboard/dynamic-edit/contact-us-line') ? 'active bg-gradient-primary':'' }}" href="{{url('dashboard/dynamic-edit/contact-us-line')}}">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -96,6 +104,7 @@
             <span class="nav-link-text ms-1">Contact Us Line</span>
           </a>
         </li>
+
         <li class="nav-item">
           <a class="nav-link text-white {{ Request::is('dashboard/dynamic-edit/contact-us-row') ? 'active bg-gradient-primary':'' }}" href="{{url('dashboard/dynamic-edit/contact-us-row')}}">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -104,6 +113,34 @@
             <span class="nav-link-text ms-1">Contact Us Row</span>
           </a>
         </li>
+
+        <li class="nav-item">
+          <a class="nav-link text-white {{ Request::is('dashboard/dynamic-edit/counter') ? 'active bg-gradient-primary':'' }}" href="{{url('dashboard/dynamic-edit/counter')}}">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="fa-solid fa-list"></i>
+            </div>
+            <span class="nav-link-text ms-1">Counter</span>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link text-white {{ Request::is('dashboard/dynamic-edit/email-box') ? 'active bg-gradient-primary':'' }}" href="{{url('dashboard/dynamic-edit/email-box')}}">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="fa-solid fa-list"></i>
+            </div>
+            <span class="nav-link-text ms-1">Email Box</span>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link text-white {{ Request::is('dashboard/dynamic-edit/faqs') ? 'active bg-gradient-primary':'' }}" href="{{url('dashboard/dynamic-edit/faqs')}}">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="fa-solid fa-list"></i>
+            </div>
+            <span class="nav-link-text ms-1">FAQs</span>
+          </a>
+        </li>
+        
 
         <!-- <li class="nav-item mt-3">
           <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">Account pages</h6>

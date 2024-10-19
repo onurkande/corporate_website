@@ -13,11 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('counters', function (Blueprint $table) {
-            $table->id();
-            $table->json('title')->nullable();
-            $table->json('number')->nullable();
-            $table->timestamps();
+        Schema::table('email_boxes', function (Blueprint $table) {
+            $table->string('email_name')->after('button');
         });
     }
 
@@ -28,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('counters');
+        Schema::table('email_boxes', function (Blueprint $table) {
+            $table->dropColumn('email_name');
+        });
     }
 };

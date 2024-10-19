@@ -17,14 +17,15 @@
                         <div class="themesflat-spacer clearfix" data-desktop="38" data-mobile="35" data-smobile="35"></div>
                         <div class="themesflat-accordions style-1 has-icon icon-left iconstyle-1 clearfix">
                             @php
-                                $lines = json_decode($record->lines, TRUE);
+                                $header = json_decode($record->header, TRUE);
+                                $content = json_decode($record->content, TRUE);
                             @endphp
 
-                            @foreach($lines as $line)
+                            @foreach($header as $key=>$single)
                                 <div class="accordion-item">
-                                    <h3 class="accordion-heading"><span class="inner">{{$line["header"]}}</span></h3>
+                                    <h3 class="accordion-heading"><span class="inner">{{$single}}</span></h3>
                                     <div class="accordion-content">
-                                        <div>{{$line["content"]}}</div>
+                                        <div>{{$content[$key]}}</div>
                                     </div>
                                 </div><!-- /.accordion-item -->
                             @endforeach

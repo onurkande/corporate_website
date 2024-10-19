@@ -41,6 +41,7 @@
 
             @if($record)
                 <form method="post" action="{{url('dashboard/dynamic-edit/counter-update/'.$record->id)}}">
+                    @csrf
                     
                     <div class="row">
                         <div class="col-md-6">
@@ -132,5 +133,60 @@
         </div>
     </div>
 
-    
+
+    <script>
+        function addRows() {
+            const moreTitle = document.getElementById('more-title');
+            const moreNumber = document.getElementById('more-number');
+
+            const titleRow = document.createElement("div");
+            titleRow.innerHTML = '<input type="text" class="form-control" name="title[]" oninput="checkInputRowsValues()" required>';
+            moreTitle.appendChild(titleRow);
+
+            const numberRow = document.createElement("div");
+            numberRow.innerHTML = '<input type="number" class="form-control" name="number[]" oninput="checkInputRowsValues()" required>';
+            moreNumber.appendChild(numberRow);
+        }
+
+        function removeRows() {
+            const titleSection = document.getElementById("more-title");
+            const numberSection = document.getElementById("more-number");
+
+            if (titleSection.children.length > 0) {
+                titleSection.removeChild(titleSection.lastElementChild);
+            }
+
+            if (numberSection.children.length > 0) {
+                numberSection.removeChild(numberSection.lastElementChild);
+            }
+        }
+
+        function checkInputRowsValues() {
+            const titleInputs = document.querySelectorAll('input[name="title[]"]');
+            const numberInputs = document.querySelectorAll('input[name="number[]"]');
+
+            titleInputs.forEach((titleInput, index) => {
+                const numberInput = numberInputs[index];
+
+                if (titleInput.value === '' && numberInput.value === '') {
+                    // Her iki alan da boş ise
+                    titleInput.setCustomValidity('Please fill in the title');
+                    numberInput.setCustomValidity('Please fill in the number');
+                } else if (titleInput.value !== '' && numberInput.value === '') {
+                    // Sadece number alanı boş ise
+                    numberInput.setCustomValidity('Please fill in the number');
+                    titleInput.setCustomValidity(''); // Önceki hatayı temizle
+                } else if (titleInput.value === '' && numberInput.value !== '') {
+                    // Sadece title alanı boş ise
+                    titleInput.setCustomValidity('Please fill in the title');
+                    numberInput.setCustomValidity(''); // Önceki hatayı temizle
+                } else {
+                    // Her iki alan da dolu ise
+                    titleInput.setCustomValidity('');
+                    numberInput.setCustomValidity('');
+                }
+            });
+        }
+    </script>
+
 @endsection

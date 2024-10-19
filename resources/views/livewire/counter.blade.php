@@ -8,9 +8,10 @@
             </div><!-- /.row -->                                    
             <div class="themesflat-row gutter-30 separator light clearfix">
                 @php
-                    $columns=json_decode($record->columns, TRUE);
+                    $title = json_decode($record->title, TRUE);
+                    $number = json_decode($record->number, TRUE);
                 @endphp
-                @foreach($columns as $column)
+                @foreach($title as $key=>$single)
                     <div class="col span_1_of_3">
                         <div class="themesflat-content-box clearfix" data-margin="0 0 0 0" data-mobilemargin="0 0 0 0">
                             <div class="themesflat-counter style-1 align-center clearfix">
@@ -18,9 +19,9 @@
                                     <div class="inner">
                                         <div class="text-wrap">
                                             <div class="number-wrap">
-                                                <span class="number" data-speed="2000" data-to="{{$column['number']}}" data-inviewport="yes">{{$column['number']}}</span><span class="suffix">+</span>
+                                                <span class="number" data-speed="2000" data-to="{{$number[$key]}}" data-inviewport="yes">{{$number[$key]}}</span><span class="suffix">+</span>
                                             </div>
-                                            <h3 class="heading margin-right-18">{{$column['title']}}</h3>
+                                            <h3 class="heading margin-right-18">{{$single}}</h3>
                                         </div>
                                     </div>
                                 </div>

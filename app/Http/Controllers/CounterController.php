@@ -21,70 +21,45 @@ class CounterController extends Controller
 
     function store()
     {
+        $counter =new Counter;
 
         $title=request()->input('title');
         $number=request()->input('number');
-        //dd($title);
-        $columns=[];
-        $column=[
-            "title" => $title,
-            "number" => $number
-        ];
+        
+        $title = json_encode($title, JSON_UNESCAPED_UNICODE);
+        $counter->title = $title;
 
-        array_push($columns,$column);
+        $number = json_encode($number, JSON_UNESCAPED_UNICODE);
+        $counter->number = $number;
 
-        $columns=json_encode($columns,JSON_UNESCAPED_UNICODE);
-        //dd($columns);
-
-        $counter = new Counter;
-
-        $counter->columns = $columns;
- 
         $counter->save();
 
-        return redirect('dashboard/dynamic-edit/counter');
+        return redirect('dashboard/dynamic-edit/counter')->with('store',"Counter eklendi");
 
     }
 
-    function update()
+    function update($id)
     {
+        $counter = Counter::find($id);
+
         $title=request()->input('title');
         $number=request()->input('number');
-        $allColumn = [$title,$number];
-        if($title != null or $number != null)
-        {
-            $columnCount = count($title);
-            $index = 0;
-            $column = [];
-            while($index < $columnCount){
-                $column[$title[$index]] = [
-                    "title" => $title[$index],
-                    "number" => $number[$index]
-                ];
-                $index++;
-            }
-            $column=json_encode($column,JSON_UNESCAPED_UNICODE);
         
-        }
-        else
-        {
-            $column = null;
-        }
+        $title = json_encode($title, JSON_UNESCAPED_UNICODE);
+        $counter->title = $title;
 
-        $counter = new Counter;
-        $counter = $counter::find(1);
+        $number = json_encode($number, JSON_UNESCAPED_UNICODE);
+        $counter->number = $number;
 
-        $counter->columns = $column;
- 
         $counter->save();
 
-        return redirect('dashboard/dynamic-edit/counter');
+        return redirect('dashboard/dynamic-edit/counter')->with('update',"Counter güncellendi");
     }
 
     function hasRecord()
     {
-        $counter = new Counter;
-        $counter = $counter::find(1);
+        $counter= Counter::latest()->first();
+
         if($counter)
         {
             return $counter;   
@@ -95,26 +70,37 @@ class CounterController extends Controller
         }
     }
 
-    function delete()
+    function delete($id)
     {
-        $counter = new Counter;
-        $counter = Counter::find(1);
-        $columns=json_decode($counter->columns, TRUE);
-        if (array_key_exists(request()->all()["title"],$columns))
-        {
-            unset($columns[request()->all()["title"]]);
-            //dd($columns);
+        $counter = Counter::first(); 
 
-            $columns=json_encode($columns,JSON_UNESCAPED_UNICODE);
-            $counter->columns = $columns;
-     
+        $title = json_decode($counter->title, TRUE);
+        $number = json_decode($counter->number, TRUE);
+
+        $index = array_search($id, $title);
+
+        if($title[$index] && $number[$index])
+        {
+            unset($title[$index]);
+            unset($number[$index]);
+            
+            $counter->title = json_encode(array_values($title), JSON_UNESCAPED_UNICODE);
+            $counter->number = json_encode(array_values($number), JSON_UNESCAPED_UNICODE);
+
             $counter->save();
 
-        }
+            return redirect('dashboard/dynamic-edit/counter')->with('delete', "rows silindi");
+        } 
         else
         {
-            echo "Key does not exist!";
+            return redirect('dashboard/dynamic-edit/counter')->with('delete', "Değer dizide bulunamadı.");
         }
-        
+    }
+
+    function allDelete($id)
+    {
+        $counter = Counter::find($id);
+        $counter->delete();
+        return redirect('dashboard/dynamic-edit/counter')->with('delete',"counter silindi");
     }
 }

@@ -23,73 +23,52 @@ class FaqController extends Controller
 
     function store()
     {
+        $faqs = new Faq;
+
         $title=request()->input('title');
+
         $header=request()->input('header');
+        $header = json_encode($header, JSON_UNESCAPED_UNICODE);
+        $faqs->header = $header;
+
         $content=request()->input('content');
+        $content = json_encode($content, JSON_UNESCAPED_UNICODE);
+        $faqs->content = $content;
+        
+        $faqs->title=$title;
 
-        $lines=[
-            'header'=>
-                [
-                    "header" => $header,
-                    "content" => $content
-                ]
-            ];
-
-        $lines=json_encode($lines,JSON_UNESCAPED_UNICODE);
-
-        $faqs=new Faq;
-        $faqs->title = $title;
-        $faqs->lines = $lines;
         $faqs->save();
 
-        return redirect('dashboard/dynamic-edit/faqs');
+        return redirect('dashboard/dynamic-edit/faqs')->with('store',"Faq eklendi");
     }
 
-    function update()
+    function update($id)
     {
+        $faqs = Faq::find($id);
+
         $title=request()->input('title');
-        $header=request()->input('header');
-        $content=request()->input('content');
-        $allLines = [$header, $content];
-        if($header != null or $content != null)
-        {
-            $linesCount = count($header);
-            $index = 0;
-            $lines = [];
-            while($index < $linesCount){
-                $lines[$header[$index]] = [
-                    "header" => $header[$index],
-                    "content" => $content[$index]
-                ];
-                $index++;
-            }
-            $lines=json_encode($lines,JSON_UNESCAPED_UNICODE);
-        
-        }
-        else
-        {
-            $lines = null;
-        }
-        
 
+        $header = request()->input('header');
+        $header = json_encode($header, JSON_UNESCAPED_UNICODE);
+        $faqs->header = $header;
 
-        $faqs = new Faq;
-        $faqs = $faqs::find(1);
+        $content = request()->input('content');
+        $content = json_encode($content, JSON_UNESCAPED_UNICODE);
+        $faqs->content = $content;
 
         $faqs->title = $title;
-        $faqs->lines = $lines;
  
         $faqs->save();
 
-        return redirect('dashboard/dynamic-edit/faqs');
+        return redirect('dashboard/dynamic-edit/faqs')->with('update',"Faq güncellendi");
     }
 
-    function hasRecord()
+    public static function hasRecord()
     {
-        $faqs=Faq::find(1);
+        $faqs= Faq::latest()->first();
         if($faqs)
         {
-            return $faqs;
+            return $faqs;   
         }
         else
         {
@@ -97,28 +76,46 @@ class FaqController extends Controller
         }
     }
 
-    function delete()
+
+    function delete($id)
     {
-        $faqs = new Faq;
-        $faqs = Faq::find(1);
-        $lines=json_decode($faqs->lines, TRUE);
-        if (array_key_exists(request()->all()["header"],$lines))
-        {
-            unset($lines[request()->all()["header"]]);
-            // dd($lines);
-
-            $lines=json_encode($lines,JSON_UNESCAPED_UNICODE);
-            $faqs->lines = $lines;
-     
-            $faqs->save();
-
+        $faqs = Faq::first(); 
+    
+        $header = json_decode($faqs->header, TRUE);
+        $content = json_decode($faqs->content, TRUE);
+    
+        $index = array_search($id, $header);
+    
+        if ($index !== false) {
+            // Check if only one entry is left in both arrays
+            if (count($header) == 1 && count($content) == 1) {
+                // If there is only one entry and it's being deleted, delete the entire record
+                $faqs->delete();
+                return redirect('dashboard/dynamic-edit/faqs')->with('delete', "All FAQ entries deleted.");
+            } else {
+                // If more than one entry exists, remove the specific entry
+                unset($header[$index]);
+                unset($content[$index]);
+                
+                // Save the updated arrays back to the database
+                $faqs->header = json_encode(array_values($header), JSON_UNESCAPED_UNICODE);
+                $faqs->content = json_encode(array_values($content), JSON_UNESCAPED_UNICODE);
+                
+                $faqs->save();
+    
+                return redirect('dashboard/dynamic-edit/faqs')->with('delete', "FAQ entry deleted.");
+            }
+        } else {
+            return redirect('dashboard/dynamic-edit/faqs')->with('delete', "Value not found in the list.");
         }
-        else
-        {
-            echo "Key does not exist!";
-        }
- 
     }
+    
 
+    function allDelete($id)
+    {
+        $faqs = Faq::find($id);
+        $faqs->delete();
+        return redirect('dashboard/dynamic-edit/faqs')->with('delete',"Faq Us Row silindi");
+    }
 
 }

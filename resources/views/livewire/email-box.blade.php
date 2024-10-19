@@ -8,7 +8,7 @@
                         {{$record->content}}
                     </p>
                     <div class="elm-button">
-                        <a href="#" class="themesflat-button bg-accent pd30">{{$record->button}}</a>
+                        <a href="mailto:{{$record->email_name}}?subject=Interested%20in%20your%20project&body=Please%20provide%20more%20details%20about%20how%20you%20can%20help%20with%20my%20project." class="themesflat-button bg-accent pd30">{{$record->button}}</a>
                     </div>
                 </div>                                
             </div>

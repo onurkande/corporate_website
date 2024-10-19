@@ -24,9 +24,10 @@
             Route::get('/',[DynamicIndexController::class, 'index']);
 
             Route::get('/faqs',[FaqController::class, 'index']);
-            Route::post('/faqs',[FaqController::class, 'store']);
-            Route::post('/faq-update',[FaqController::class, 'update']);
-            Route::get('/faq-delete',[FaqController::class, 'delete'])->name('faq-delete');
+            Route::post('/faqs-insert',[FaqController::class, 'store']);
+            Route::post('/faqs-update/{id}',[FaqController::class, 'update']);
+            Route::get('/faqs-delete/{id}',[FaqController::class, 'delete'])->name('faq-delete');
+            Route::get('/allFaqs-delete/{id}', [FaqController::class, 'allDelete']);
 
             Route::get('/contact-us-row', [ContactUsRowController::class, 'index']);
             Route::post('/ContactUsRow-insert', [ContactUsRowController::class, 'store']);
@@ -40,9 +41,10 @@
             Route::get('/ContactUsLine-delete/{id}', [ContactUsLineController::class, 'delete']);
 
             Route::get('/counter', [CounterController::class, 'index']);
-            Route::post('/counter', [CounterController::class, 'store']);
-            Route::post('/counter-update',[CounterController::class, 'update']);
-            Route::get('/counter-delete',[CounterController::class, 'delete'])->name('counter-delete');
+            Route::post('/counter-insert', [CounterController::class, 'store']);
+            Route::post('/counter-update/{id}',[CounterController::class, 'update']);
+            Route::get('/counter-delete/{id}',[CounterController::class, 'delete']);
+            Route::get('/allCounter-delete/{id}', [CounterController::class, 'alldelete']);
 
             Route::get('/team', [TeamController::class,'index']);
             Route::post('/team',[TeamController::class, 'store']);
@@ -65,14 +67,15 @@
             Route::post('/featuredProject-update',[FeaturedProjectController::class, 'update']);
             Route::get('/featuredProject-delete',[FeaturedProjectController::class, 'delete'])->name('featuredProject-delete');;
 
-            Route::get('/best-services',[BestServicesController::class, 'index']);
+            Route::get('/best-services',[BestServicesController::class, 'index']); 
             Route::post('/best-services-insert',[BestServicesController::class, 'store']);
             Route::post('/bestServices-update/{id}',[BestServicesController::class, 'update']);
             Route::get('/bestServices-delete/{id}',[BestServicesController::class, 'delete'])->name('bestServices-delete');
             
             Route::get('/email-box',[EmailBoxController::class, 'index']);
-            Route::post('/email-box',[EmailBoxController::class, 'store']);
-            Route::post('/emailBox-update',[EmailBoxController::class, 'update']);
+            Route::post('/emailBox-insert',[EmailBoxController::class, 'store']);
+            Route::post('/emailBox-update/{id}',[EmailBoxController::class, 'update']);
+            Route::get('/allEmailBox-delete/{id}',[EmailBoxController::class, 'allDelete']);
             
             Route::get('/consult-with-us',[ConsultWithUsController::class, 'index']);
             Route::post('/consultWithUs-insert',[ConsultWithUsController::class, 'store']);
