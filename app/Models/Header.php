@@ -5,24 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Footer extends Model
+class Header extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'logo',
-        'description',
-        'contact_items',
+        'address',
+        'phone',
+        'working_hours',
         'icons',
-        'tags',
-        'instagram_photos',
-        'copyright_text'
+        'icon_urls'
     ];
 
     protected $casts = [
-        'contact_items' => 'array',
         'icons' => 'array',
-        'tags' => 'array',
-        'instagram_photos' => 'array'
+        'icon_urls' => 'array'
     ];
 }

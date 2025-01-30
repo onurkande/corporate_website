@@ -17,7 +17,9 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('content');
-            $table->json('employee')->nullable();
+            $table->json('images')->nullable();
+            $table->json('names')->nullable();
+            $table->json('tasks')->nullable();
             $table->timestamps();
         });
     }

@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('info_boxes', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->json('rows');
+            $table->json('images')->nullable();
             $table->timestamps();
         });
     }

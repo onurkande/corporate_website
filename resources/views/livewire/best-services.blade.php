@@ -19,28 +19,30 @@
                     <div class="themesflat-carousel-box data-effect clearfix" data-gap="30" data-column="3" data-column2="2" data-column3="1" data-auto="false">
                         <div class="owl-carousel owl-theme">
 
-                            @php
-                                $rows = json_decode($record->rows, TRUE);
-                            @endphp
-                            @foreach($rows as $row)
-                                <div class="themesflat-image-box style-1 has-icon icon-right w65 clearfix">
-                                    <div class="image-box-item">
-                                        <div class="inner">
-                                            <div class="thumb data-effect-item">
-                                                <img src="/images/{{$row['image']}}"> 
-                                                <div class="overlay-effect bg-color-accent"></div>
-                                            </div>
-                                            <div class="text-wrap">
-                                                <h5 class="heading"><a href="#">{{$row['header']}}</a></h5>
-                                                <span class="icon-wrap">
-                                                    <i class="fa fa-angle-right"></i>
-                                                </span>
+                            @if($record->header)
+                                @php
+                                    $headers = json_decode($record->header, TRUE);
+                                    $images = json_decode($record->image, TRUE);
+                                @endphp
+                                @foreach($headers as $key =>$single)
+                                    <div class="themesflat-image-box style-1 has-icon icon-right w65 clearfix">
+                                        <div class="image-box-item">
+                                            <div class="inner">
+                                                <div class="thumb data-effect-item">
+                                                    <img src="{{ asset('admin/bestServicesImage/'.$images[$key]) }}"> 
+                                                    <div class="overlay-effect bg-color-accent"></div>
+                                                </div>
+                                                <div class="text-wrap">
+                                                    <h5 class="heading"><a href="#">{{$single}}</a></h5>
+                                                    <span class="icon-wrap">
+                                                        <i class="fa fa-angle-right"></i>
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div><!-- /.themesflat-image-box -->
-                            @endforeach
-                        
+                                    </div><!-- /.themesflat-image-box -->
+                                @endforeach
+                            @endif
                         </div>
                     </div><!-- /.themesflat-carousel-box -->
                     <div class="themesflat-spacer clearfix" data-desktop="50" data-mobile="35" data-smobile="35"></div>

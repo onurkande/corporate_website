@@ -78,9 +78,9 @@
                                 $header = json_decode($record->header, TRUE);
                             @endphp
                             <div class="row">
-                                @foreach($header as $single)
+                                @foreach($header as $key => $single)
                                 <div class="col-md-1">
-                                    <a href="{{url('dashboard/dynamic-edit/bestServices-delete/'.$single)}}"><button class="btn-danger" type="button">Sil</button></a>
+                                    <a href="{{url('dashboard/dynamic-edit/bestServices-delete/'.$key)}}"><button class="btn-danger" type="button">Sil</button></a>
                                 </div>
                                 <div class="col-md-11">
                                     <input type="text" name="header[]" class="form-control" value="{{$single}}" oninput="checkInputRowsValues()">
@@ -104,7 +104,7 @@
                                 <input type="file" name="image[]" class="form-control" style="margin-bottom: 1rem">
                                 <input type="hidden" name="old_image[{{$index}}]" value="{{$single}}">
                             @endforeach
-                            <section id="more-paragraph">
+                            <section id="more-image">
                             </section>
                         </div>
                     
@@ -215,7 +215,7 @@
             }
         }
 
-        function checkInputRowsValues() 
+        /*function checkInputRowsValues() 
         {
             const headerInputs = document.querySelectorAll('input[name="header[]"]');
             const imageInputs = document.querySelectorAll('input[name="image[]"]');
@@ -232,6 +232,6 @@
                     imageInput.setCustomValidity('');
                 }
             });
-        }
+        }*/
     </script>
 @endsection

@@ -15,10 +15,9 @@ return new class extends Migration
     {
         Schema::create('our_services', function (Blueprint $table) {
             $table->id();
-            //$table->bigInteger('id')->default(1);
             $table->string('title');
             $table->string('content');
-            $table->json('rows');
+            $table->json('content_rows');
             $table->timestamps();
         });
     }

@@ -52,40 +52,41 @@
 
                     <br>
 
-                    <div class="row">
-                        <div class="col-md-4">
-                            <label for="">Header :</label>
-                            @php
-                                $header = json_decode($record->header, TRUE);
-                            @endphp
-                            <div class="row">
-                                @foreach($header as $single)
-                                <div class="col-md-1">
-                                    <a href="{{url('dashboard/dynamic-edit/faqs-delete/'.$single)}}"><button class="btn-danger" type="button">Sil</button></a>
-                                </div>
-                                <div class="col-md-11">
-                                    <input type="text" name="header[]" class="form-control" value="{{$single}}" oninput="checkInputRowsValues()">
-                                </div>
-                                @endforeach
-                            </div>
-                            <section id="more-header"></section>
-                            <br>
-                            <div>
-                                <a onclick="addRows()"><button type="button">+</button></a>
-                                <a onclick="removeRows()"><button type="button">-</button></a>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="">Content :</label>
-                            @php
-                                $content = json_decode($record->content, TRUE);
-                            @endphp
-                            @foreach($content as $single)
-                                <textarea cols="30" rows="4" name="content[]" class="form-control" oninput="checkInputRowsValues()">{{$single}}</textarea>
-                            @endforeach
-                            <section id="more-content"></section>
-                        </div>
+                    <div>
+                        <a onclick="addUpdateRows()"><button type="button">+</button></a>
+                        <a onclick="removeUpdateRows()"><button type="button">-</button></a>
                     </div>
+
+                    <br>
+
+                    @php
+                        $header = json_decode($record->header, TRUE);
+                        $content = json_decode($record->content, TRUE);
+                    @endphp
+                    @foreach($header as $key=>$single)
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="">Header :</label>
+                                <div class="row">
+                                    <div class="col-md-1">
+                                        <a href="{{url('dashboard/dynamic-edit/faqs-delete/'.$single)}}"><button class="btn-danger" type="button">Sil</button></a>
+                                    </div>
+                                    <div class="col-md-11">
+                                        <input type="text" name="header[]" class="form-control" value="{{$single}}" oninput="checkInputRowsValues()">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="">Content :</label>
+                                <textarea cols="30" rows="4" name="content[]" class="form-control" oninput="checkInputRowsValues()">{{$content[$key]}}</textarea>
+                            </div>
+                        </div>
+                        <br>
+                    @endforeach
+
+
+                    <section id="more-updateRows"></section>
+                    
 
                     <br>
 
@@ -132,6 +133,10 @@
 
                     <br>
 
+                    <section id="more-rows"></section>
+
+                    <br>
+
                     <div class="row mt-3">
                         <div class="col-md-8">
                             <button type="submit" class="btn btn-primary btn-lg btn-block" style="display: block; width: 100%;">Submit</button>
@@ -147,32 +152,31 @@
 
 <script>
     function addRows() {
-        const moreHeader = document.getElementById('more-header');
-        const moreContent = document.getElementById('more-content');
+        const moreRows = document.getElementById('more-rows');
 
-        // Yeni Header satırı ekleniyor
-        const headerRow = document.createElement("div");
-        headerRow.innerHTML = '<input type="text" class="form-control" name="header[]" oninput="checkInputRowsValues()" required>';
-        moreHeader.appendChild(headerRow);
-
-        // Yeni Content satırı ekleniyor
-        const contentRow = document.createElement("div");
-        contentRow.innerHTML = '<textarea cols="30" rows="4" class="form-control" name="content[]" oninput="checkInputRowsValues()" required></textarea>';
-        moreContent.appendChild(contentRow);
+        const Rows = document.createElement("div");
+        Rows.innerHTML = `
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="">Header :</label>
+                    <input type="text" name="header[]" class="form-control" oninput="checkInputRowsValues()">
+                </div>
+                <div class="col-md-4">
+                    <label for="">Content :</label>
+                    <textarea cols="30" rows="4" name="content[]" class="form-control" oninput="checkInputRowsValues()"></textarea>
+                </div>
+            </div>
+            <br>
+        `;
+        moreRows.appendChild(Rows);
     }
 
     function removeRows() {
-        const headerSection = document.getElementById("more-header");
-        const contentSection = document.getElementById("more-content");
+        const rowsSection = document.getElementById('more-rows');
 
-        // Son header satırı kaldırılıyor
-        if (headerSection.children.length > 0) {
-            headerSection.removeChild(headerSection.lastElementChild);
-        }
-
-        // Son content satırı kaldırılıyor
-        if (contentSection.children.length > 0) {
-            contentSection.removeChild(contentSection.lastElementChild);
+        // Son satır kaldırılıyor
+        if (rowsSection.children.length > 0) {
+            rowsSection.removeChild(rowsSection.lastElementChild);
         }
     }
 
@@ -198,43 +202,33 @@
     }
 </script>
 
+<script>
+    function addUpdateRows() {
+        const moreRows = document.getElementById('more-updateRows');
 
-<!-- <script>
-    function addRowsUpdate() {
-        const moreRowsUpdate = document.getElementById('more-rowsUpdate');
-
-        // Yeni bir satır (row) oluşturuluyor
-        const newRow = document.createElement("div");
-        newRow.className = "row";
-        newRow.innerHTML = `
-            <div class="col-md-1">
-                <button class="btn-danger" type="button" onclick="removeThisRow(this)">Sil</button>
+        const Rows = document.createElement("div");
+        Rows.innerHTML = `
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="">Header :</label>
+                    <input type="text" name="header[]" class="form-control" oninput="checkInputRowsValues()">
+                </div>
+                <div class="col-md-4">
+                    <label for="">Content :</label>
+                    <textarea cols="30" rows="4" name="content[]" class="form-control" oninput="checkInputRowsValues()"></textarea>
+                </div>
             </div>
-            <div class="col-md-11">
-                <input type="text" name="header[]" class="form-control" oninput="checkInputRowsValues()" required>
-            </div>
-            <div class="col-md-4">
-                <label for="">Content :</label>
-                <textarea cols="30" rows="4" name="content[]" class="form-control" oninput="checkInputRowsValues()" required></textarea>
-            </div>
+            <br>
         `;
-        moreRowsUpdate.appendChild(newRow);
+        moreRows.appendChild(Rows);
     }
 
-    function removeRowsUpdate() {
-        const moreRowsUpdate = document.getElementById('more-rowsUpdate');
+    function removeUpdateRows() {
+        const rowsSection = document.getElementById('more-updateRows');
 
         // Son satır kaldırılıyor
-        if (moreRowsUpdate.children.length > 0) {
-            moreRowsUpdate.removeChild(moreRowsUpdate.lastElementChild);
-        }
-    }
-
-    // Belirli bir satırı silmek için fonksiyon
-    function removeThisRow(button) {
-        const rowToRemove = button.closest('.row');
-        if (rowToRemove) {
-            rowToRemove.remove();
+        if (rowsSection.children.length > 0) {
+            rowsSection.removeChild(rowsSection.lastElementChild);
         }
     }
 
@@ -258,7 +252,7 @@
             }
         });
     }
-</script> -->
+</script>
 
 
 

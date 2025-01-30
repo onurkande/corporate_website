@@ -9,137 +9,99 @@ class TeamController extends Controller
 {
     function index()
     {
-        $record=app('App\Http\Controllers\TeamController')->hasRecord();   // başka bir fonksiyonu bir fonksiyonun içinde çagırdık
-        return view('/dynamic/team',['record'=>$record]);
+        $record = Team::first();
+        return view('dynamic.team',compact('record'));
     }
 
-    function view()
+    function update(Request $request)
     {
-        $record=app('App\Http\Controllers\TeamController')->hasRecord();   // başka bir fonksiyonu bir fonksiyonun içinde çagırdık
-        return $record;
-    }
-
-    function store()
-    {
-        $title=request()->input('title');
-        $content=request()->input('content');
-        $image=request()->file('image');
-        $name=request()->input('name');
-        $task=request()->input('task');
-
-        $image_path = $image->storeAs('public/images/team', request()->file('image')->getClientOriginalName());
-        // dd($image_path);
-        if($image != null or $name != null or $task != null)
-        {
-            $employee=[
-                "$name"=>[
-                    'image' => 'team/'.request()->file('image')->getClientOriginalName(),
-                    "name" => $name,
-                    "task" => $task
-                ]
-            ];
-
-            $employee=json_encode($employee,JSON_UNESCAPED_UNICODE);
-        
+        $record = Team::first();
+        if (!$record) {
+            $record = new Team();
         }
-        else
-        {
-            $employee = null;
-        }
-        
 
-
-        $team = new Team;
-
-        $team->title = $title;
-        $team->content = $content;
-        $team->employee = $employee;
- 
-        $team->save();
-
-        //session()->flash('ogrencieklendi', 'Ögrenci verileri başarıyla eklendi!');
-        return redirect('dashboard/dynamic-edit/team');
-    }
-
-    function update()
-    {
-        $title=request()->input('title');
-        $content=request()->input('content');
-        $image=request()->file('image');
-        $name=request()->input('name');
-        $task=request()->input('task');
-        $oldImage = request()->input('oldImage');
-
-        $allEmployee = [$name, $image, $task];
-        if($image != null or $name != null or $task != null)
-        {
-            $employeeCount = count($name);
-            $index = 0;
-            $employee = [];
-            while($index < $employeeCount){
-                $employee[$name[$index]] = [
-                    "name" => $name[$index],
-                    "image" => isset($image[$index]) ? 'team/'.request()->file('image')[$index]->getClientOriginalName() : $oldImage[$index],
-                    "task" => $task[$index]
-                ];
-                if(isset($image[$index])) $image[$index]->storeAs('public/images/team', request()->file('image')[$index]->getClientOriginalName());
-                $index++;
+        if ($request->hasFile('images')) {
+            $imageNames = [];
+            
+            // Get existing images if any
+            if ($record->images) {
+                $imageNames = json_decode($record->images);
             }
-            $employee=json_encode($employee,JSON_UNESCAPED_UNICODE);
-        
+            
+            // Add new images
+            foreach($request->file('images') as $imageFile) {
+                $imageName = time() . '_' . $imageFile->getClientOriginalName();
+                $imageFile->move(public_path('admin/teamImage'), $imageName);
+                $imageNames[] = $imageName;
+            }
+            
+            $record->images = json_encode($imageNames);
         }
-        else
-        {
-            $employee = null;
+
+        if($request->names){
+            $record->names = json_encode($request->names);
         }
-        
+        if($request->tasks){
+            $record->tasks = json_encode($request->tasks);
+        }
+        $record->title = $request->title;
+        $record->content = $request->content;
+        $record->save();
 
+        return redirect()->back()->with('store', 'Team başarıyla güncellendi!');
+    }
+    
+    function delete($index)
+    {
+        $record = Team::first();
+        if ($record) {
+            $images = json_decode($record->images, true);
+            $names = json_decode($record->names, true);
+            $tasks = json_decode($record->tasks, true);
 
-        $team = new Team;
-        $team = $team::find(1);
+            if (isset($images[$index]) && isset($names[$index]) && isset($tasks[$index])) {
 
-        $team->title = $title;
-        $team->content = $content;
-        $team->employee = $employee;
- 
-        $team->save();
-        return redirect('dashboard/dynamic-edit/team');
+                $oldPath = public_path('admin/teamImage/' . $images[$index]);
+                if(file_exists($oldPath))
+                {
+                    unlink($oldPath);
+                }
+
+                unset($images[$index]);
+                unset($names[$index]);
+                unset($tasks[$index]);
+
+                $record->images = json_encode(array_values($images));
+                $record->names = json_encode(array_values($names));
+                $record->tasks = json_encode(array_values($tasks));
+                $record->save();
+            }
+        }
+        return redirect()->back()->with('delete', 'Team başarıyla silindi!');
     }
 
-    function hasRecord()
+    function allDelete()
     {
-        $team = new Team;
-        $team = $team::find(1);
-        if($team)
+        $record = Team::first();
+        if($record->images)
         {
-            return $team;   
+            $images = json_decode($record->images);
+            foreach($images as $image)
+            {
+                $path = (public_path('admin/teamImage/'.$image));
+                if(file_exists($path))
+                {
+                    unlink($path);
+                }
+            }
         }
-        else
-        {
-            return $team;
-        }
+        $record->delete();
+        return redirect('dashboard/dynamic-edit/team')->with('delete',"Team silindi");
     }
 
-    function delete()
+    public function view()
     {
-        $team = new Team;
-        $team = Team::find(1);
-        $employee=json_decode($team->employee, TRUE);
-        if(array_key_exists(request()->all()["name"],$employee))
-        {
-            unset($employee[request()->all()["name"]]);
-            // dd($employee);
-
-            $employee=json_encode($employee,JSON_UNESCAPED_UNICODE);
-            $team->employee = $employee;
-     
-            $team->save();
-
-        }
-        else
-        {
-            echo "Key does not exist!";
-        }
-        
+        $record = Team::first();
+        return $record;
     }
 }

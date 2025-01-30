@@ -10,138 +10,80 @@ class InfoBoxController extends Controller
 {
     function index()
     {
-        $record = $this->hasRecord();
-        return view('dynamic.info-box',['record'=>$record]);
+        $record = InfoBox::first();
+        return view('dynamic.info-box',compact('record'));
     }
 
-    function view()
+    function update(Request $request)
     {
-        $record = $this->hasRecord();
-        return $record;
-    }
-
-    function downloadFile($file)
-    {
-        $pathToFile = public_path('/images/InfoBoxDownloads/' . $file);
-        return response()->download($pathToFile);
-    }
-
-    function store()
-    {
-        $title=request()->input('title');
-        $file=request()->file('file');
-
-        // $file_path = $file->storeAs('public/InfoBoxDownloads', request()->file('file')->getClientOriginalName());
-
-        if($file != null)
-        {
-            $index = 0;
-            $rows = [];
-            $rows[] = ["file"=>'infoBox/'.$file->getClientOriginalName()];
-            if(isset($file)) $file->storeAs('public/images/InfoBoxDownloads/infoBox/', $file->getClientOriginalName());
-
-            // dd($rows);
-        
-        }
-        else
-        {
-            $rows = null;
+        $infoBox = InfoBox::first();
+        if (!$infoBox) {
+            $infoBox = new InfoBox();
         }
 
-        $rows=json_encode($rows,JSON_UNESCAPED_UNICODE);
-
-        $infobox = new InfoBox;
-
-        $infobox->title = $title;
-        $infobox->rows = $rows;
- 
-        $infobox->save();
-
-        return redirect('dashboard/dynamic-edit/info-box');
-    }
-
-    function update()
-    {
-        $title=request()->input('title');
-        $files =request()->file('file');
-        $oldFile = request()->input('oldFile');
-        
-        if($files != null)
-        {
-            $index = 0;
-            $fileKey = array_key_last($files);
-            $oldKey = array_key_last($oldFile);
-            $total = max($fileKey,$oldKey) +1 ;
-            $rows = [];
+        if ($request->hasFile('image')) {
+            $imageNames = [];
             
-            for($index = 0;$index < $total; $index++){
-                //dd($oldFile);
-                $rows[$index] = [
-                    "file" => isset($files[$index]) ? 'infoBox/'.$files[$index]->getClientOriginalName() : $oldFile[$index]
-                ];
-                
-                if(isset($files[$index])){
-                    $files[$index]->storeAs('public/images/InfoBoxDownloads/infoBox/', $files[$index]->getClientOriginalName());
-                }
-               
+            // Get existing images if any
+            if ($infoBox->images) {
+                $imageNames = json_decode($infoBox->images);
             }
-        
-            $rows=json_encode($rows,JSON_UNESCAPED_UNICODE);
+            
+            // Add new images
+            foreach($request->file('image') as $imageFile) {
+                $imageName = time() . '_' . $imageFile->getClientOriginalName();
+                $imageFile->move(public_path('admin/infoBoxImage'), $imageName);
+                $imageNames[] = $imageName;
+            }
+            
+            $infoBox->images = json_encode($imageNames);
         }
-        else
-        {
-            $rows = null;
-        }
-        
-        
 
-        $infobox = new InfoBox;
-        $infobox = $infobox::find(1);
 
-        $infobox->title = $title;
-        $infobox->rows = $rows;
- 
-        $infobox->save();
-        return redirect('dashboard/dynamic-edit/info-box');
+        $infoBox->title = $request->title;
+        $infoBox->save();
+
+        return redirect()->back()->with('success', 'Info Box başarıyla güncellendi!');
     }
 
-    function hasRecord()
+    public function deleteFile($index)
     {
-        $infobox = new InfoBox;
-        $infobox = InfoBox::find(1);
-        return $infobox ?? null;
+        $infoBox = InfoBox::first();
+        if ($infoBox) {
+            $images = json_decode($infoBox->images);
+            $oldPath = public_path('admin/infoBoxImage/' . $images[$index]);
+            if (file_exists($oldPath)) {
+                unlink($oldPath);
+            }
+            unset($images[$index]);
+            $infoBox->images = json_encode($images);
+            $infoBox->save();
+        }
+        return redirect()->back()->with('delete', 'Resim başarıyla silindi!');
     }
 
-    public function deleteFile($file)
+    function allDelete()
     {
-        $file = "infoBox/".$file;
-        $record = InfoBox::latest()->first();
-
-        if($record)
+        $infoBox = InfoBox::first();
+        if($infoBox->images)
         {
-            $rows = json_decode($record->rows, true);
-
-            foreach($rows as $key => $value)
+            $images = json_decode($infoBox->images);
+            foreach($images as $image)
             {
-                if($value['file'] == $file)
+                $path = (public_path('admin/infoBoxImage/'.$image));
+                if(file_exists($path))
                 {
-                   
-                    // Delete the file from the storage
-                    Storage::delete('InfoBoxDownloads/'.$file);
-
-                    // Remove the record from the array
-                    unset($rows[$key]);
-
-                    // Update the rows in the database
-                    $record->rows = json_encode($rows);
-                    $record->save();
-                    
-                    // return redirect()->back()->with('success', 'File deleted successfully');
-                    return redirect('dashboard/dynamic-edit/info-box');
+                    unlink($path);
                 }
             }
         }
+        $infoBox->delete();
+        return redirect('dashboard/dynamic-edit/info-box')->with('delete',"Info Box silindi");
+    }
 
-        return redirect()->back()->with('error', 'File not found');
+    public function view()
+    {
+        $infoBox = InfoBox::first();
+        return $infoBox;
     }
 }

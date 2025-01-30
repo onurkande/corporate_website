@@ -17,6 +17,8 @@
     use App\Http\Controllers\OurServicesController;
     use App\Http\Controllers\InfoController;
     use App\Http\Controllers\ServiceDetailController;
+    use App\Http\Controllers\HeaderController;
+    use App\Http\Controllers\SliderController;
 
     Route::prefix('dashboard/dynamic-edit')->group(function () {
         Route::middleware(['auth','isAdmin'])->group(function () {
@@ -47,9 +49,9 @@
             Route::get('/allCounter-delete/{id}', [CounterController::class, 'alldelete']);
 
             Route::get('/team', [TeamController::class,'index']);
-            Route::post('/team',[TeamController::class, 'store']);
-            Route::post('/team-update',[TeamController::class, 'update']);
-            Route::get('/team-delete',[TeamController::class, 'delete'])->name('team-delete');
+            Route::post('/team-update',[TeamController::class, 'update'])->name('team-update');
+            Route::get('/team-delete/{index}',[TeamController::class, 'delete'])->name('team-delete');
+            Route::get('/team-allDelete',[TeamController::class, 'allDelete'])->name('team-allDelete');
 
             Route::get('/about',[AboutController::class, 'index']);
             Route::post('/about-insert',[AboutController::class, 'store']);
@@ -63,9 +65,9 @@
             Route::get('/allAboutRow-delete/{id}',[AboutRowController::class, 'allDelete'])->name('aboutRows-delete');
 
             Route::get('/featured-project',[FeaturedProjectController::class, 'index']);
-            Route::post('/featured-project',[FeaturedProjectController::class, 'store']);
-            Route::post('/featuredProject-update',[FeaturedProjectController::class, 'update']);
-            Route::get('/featuredProject-delete',[FeaturedProjectController::class, 'delete'])->name('featuredProject-delete');;
+            Route::post('/featuredProject-insert',[FeaturedProjectController::class, 'store']);
+            Route::post('/featuredProject-update/{id}',[FeaturedProjectController::class, 'update']);
+            Route::get('/featuredProject-delete/{id}',[FeaturedProjectController::class, 'delete'])->name('featuredProject-delete');;
 
             Route::get('/best-services',[BestServicesController::class, 'index']); 
             Route::post('/best-services-insert',[BestServicesController::class, 'store']);
@@ -85,30 +87,35 @@
 
             Route::get('/info-box',[InfoBoxController::class, 'index']);
             Route::post('/info-box',[InfoBoxController::class, 'store']);
-            Route::post('/InfoBox-update',[InfoBoxController::class, 'update']);
-            // Route::get('/InfoBox-delete',[InfoBoxController::class, 'delete'])->name('InfoBox-delete');
-            Route::get('InfoBox-delete/infoBox/{file}',[InfoBoxController::class,'deleteFile']);
+            Route::post('/InfoBox-update',[InfoBoxController::class, 'update'])->name('InfoBox-update');
+            Route::get('InfoBox-delete/infoBox/{index}',[InfoBoxController::class,'deleteFile'])->name('infoBox-image-delete');
+            Route::get('/allInfoBoxAll-delete',[InfoBoxController::class, 'allDelete'])->name('InfoBoxAllDelete');
             
             Route::get('/our-services',[OurServicesController::class, 'index']);
-            Route::post('/our-services',[OurServicesController::class, 'store']);
-            Route::post('/OurServices-update',[OurServicesController::class, 'update']);
-            Route::get('/OurServices-delete',[OurServicesController::class, 'delete'])->name('OurServices-delete');
+            Route::post('/ourServices-update',[OurServicesController::class, 'update'])->name('our-services-update');
+            Route::get('/ourServices-delete/{index}',[OurServicesController::class, 'delete'])->name('our-services-content-row-delete');
+            Route::get('/ourServices-allDelete',[OurServicesController::class, 'allDelete'])->name('our-services-allDelete');
             
             Route::get('/info',[InfoController::class, 'index']);
-            Route::post('/info',[InfoController::class, 'store']);
-            Route::post('/info-update',[InfoController::class, 'update']);
+            Route::post('/info-update',[InfoController::class, 'update'])->name('info-update');
+            Route::get('/info-delete',[InfoController::class, 'delete'])->name('info-delete');
             
             Route::get('/service-detail',[ServiceDetailController::class, 'index']);
-            Route::post('/service-detail',[ServiceDetailController::class, 'store']);
-            Route::post('/ServiceDetail-update',[ServiceDetailController::class, 'update']);
+            Route::post('/serviceDetail-update',[ServiceDetailController::class, 'update'])->name('ServiceDetail-update');
+            Route::get('/serviceDetail-delete',[ServiceDetailController::class, 'delete'])->name('serviceDetail-delete');
             
-            Route::get('/footer',[FooterController::class, 'index']);
-            
-            Route::post('/InfoRows-store',[FooterController::class, 'infostore']);
-            Route::post('/InfoRows-update',[FooterController::class, 'infoupdate']);
-            Route::get('/inforows-delete',[FooterController::class, 'infodelete'])->name('inforows-delete');
+            Route::get('/header',[HeaderController::class, 'index']);
+            Route::put('/header',[HeaderController::class, 'update'])->name('headerUpdate');
+            Route::get('/header-icon-delete/{index}',[HeaderController::class, 'deleteIcon'])->name('header-icon-delete');
 
-            Route::post('/footer',[FooterController::class, 'tagstore']);
+            Route::get('/footer',[FooterController::class, 'index']);
+            Route::post('/footer',[FooterController::class, 'update'])->name('footerUpdate');
+            Route::get('/footer-contact-delete/{index}',[FooterController::class, 'deleteContactItem'])->name('footer-contact-delete');
+            Route::get('/footer-tag-delete/{index}',[FooterController::class, 'deleteTag'])->name('footer-tag-delete');
+            Route::get('/footer-photo-delete/{index}',[FooterController::class, 'deletePhoto'])->name('footer-photo-delete');
+
+            Route::resource('sliders', SliderController::class);
+
         });
     });
 

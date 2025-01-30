@@ -1,3 +1,8 @@
+@php
+$header = \App\Models\Header::first();
+@endphp
+
+@if($header)
 <div id="site-header-wrap">
     <!-- Top Bar -->        
     <div id="top-bar">
@@ -5,9 +10,9 @@
             <div class="top-bar-inner-wrap">
                 <div class="top-bar-content">
                     <div class="inner">
-                        <span class="address content">4946 Marmora Road, Central New</span>
-                        <span class="phone content">+61 3 8376 6284</span>
-                        <span class="time content">Mon-Sat: 8am - 6pm</span>
+                        <span class="address content">{{ $header->address ?? '4946 Marmora Road, Central New' }}</span>
+                        <span class="phone content">{{ $header->phone ?? '+61 3 8376 6284' }}</span>
+                        <span class="time content">{{ $header->working_hours ?? 'Mon-Sat: 8am - 6pm' }}</span>
                     </div>                            
                 </div><!-- /.top-bar-content -->
 
@@ -15,10 +20,11 @@
                     <div class="inner">
                         <span class="text">Follow us:</span>
                         <span class="icons">
-                            <a href="#"><i class="fa fa-facebook"></i></a>
-                            <a href="#"><i class="fa fa-twitter"></i></a>
-                            <a href="#"><i class="fa fa-pinterest-p"></i></a>
-                            <a href="#"><i class="fa fa-rss"></i></a>
+                            @if($header && $header->icons)
+                                @foreach($header->icons as $icon)
+                                    <a href="{{ $header->icon_urls[$loop->index] ?? '#' }}"><i class="fa fa-{{ $icon }}"></i></a>
+                                @endforeach
+                            @endif
                         </span>
                     </div>
                 </div><!-- /.top-bar-socials -->
@@ -33,7 +39,11 @@
                 <div id="site-logo" class="clearfix">
                     <div id="site-log-inner">
                         <a href="/" rel="home" class="main-logo">
-                            <img src="assets/img/logo-small.png" alt="Autora" width="186" height="39" data-retina="assets/img/logo-small@2x.png" data-width="186" data-height="39">
+                            @if($header && $header->logo)
+                                <img src="{{asset('admin/headerImage/'.$header->logo)}}" alt="Autora" width="186" height="39" data-retina="assets/img/logo-small@2x.png" data-width="186" data-height="39">
+                            @else
+                                <span style="font-size: 24px; font-weight: bold;">Autora</span>
+                            @endif
                         </a>
                     </div>
                 </div><!-- /#site-logo -->
@@ -90,3 +100,4 @@
         </div><!-- /#site-header-inner -->
     </header><!-- /#site-header -->
 </div>
+@endif

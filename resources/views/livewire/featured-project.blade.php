@@ -19,32 +19,36 @@
                         <div class="owl-carousel owl-theme">
                             
                             @php
-                                $rows = json_decode($record->rows, TRUE);
+                                $headers = json_decode($record->headers, TRUE);
+                                $contents = json_decode($record->contents, TRUE);
+                                $images = json_decode($record->images, TRUE);
                             @endphp
-                            @foreach($rows as $row)
-                                <div class="themesflat-project style-1 data-effect clearfix">
-                                    <div class="project-item">
-                                        <div class="inner">
-                                            <div class="thumb data-effect-item has-effect-icon w40 offset-v-43 offset-h-46">
-                                                {{-- <img src="/storage/images/{{$row['image']}}" alt="Image">  --}}
-                                                <img src="/images/{{$row['image']}}" alt="Image">        
-                                                <div class="text-wrap text-center">
-                                                    <h5 class="heading"><a href="#">{{$row['header']}}</a></h5>
-                                                    <div class="elm-meta">
-                                                        <span><a href="#">{{$row['content']}}</a></span>
+                            @if(is_array($headers))
+                                @foreach($headers as $key =>$single)
+                                    <div class="themesflat-project style-1 data-effect clearfix">
+                                        <div class="project-item">
+                                            <div class="inner">
+                                                <div class="thumb data-effect-item has-effect-icon w40 offset-v-43 offset-h-46">
+                                                    @if($images != null && is_array($images) && count($images) > 0)
+                                                        <img src="{{ asset('admin/featuredProjectImage/'.$images[$key]) }}" alt="Image">        
+                                                    @endif
+                                                    <div class="text-wrap text-center">
+                                                        <h5 class="heading"><a href="#">{{$single}}</a></h5>
+                                                        <div class="elm-meta">
+                                                            <span><a href="#">{{$contents[$key]}}</a></span>
+                                                        </div>
                                                     </div>
+                                                    <div class="elm-link">
+                                                        {{-- <a href="#" class="icon-1 icon-search"></a>
+                                                        <a href="#" class="icon-1"></a> --}}
+                                                    </div>
+                                                    <div class="overlay-effect bg-color-3"></div>
                                                 </div>
-                                                <div class="elm-link">
-                                                    {{-- <a href="#" class="icon-1 icon-search"></a>
-                                                    <a href="#" class="icon-1"></a> --}}
-                                                </div>
-                                                <div class="overlay-effect bg-color-3"></div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div><!-- /.themesflat-project -->
-                            @endforeach
-                            
+                                    </div><!-- /.themesflat-project -->
+                                @endforeach
+                            @endif
                         </div>
                     </div><!-- /.themesflat-carousel-box -->
                     <div class="themesflat-spacer clearfix" data-desktop="41" data-mobile="35" data-smobile="35"></div>

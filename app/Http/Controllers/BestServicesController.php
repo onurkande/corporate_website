@@ -60,22 +60,38 @@ class BestServicesController extends Controller
     function update($id)
     {
         $bestservices = BestServices::find($id);
-        $oldImages =request()->old_image;
 
-        dd($oldImages);
-
-        if(request()->hasfile('image'))
-        {
+        if(request()->hasfile('image')) {
+            // Get existing images from database
+            $existingImages = json_decode($bestservices->image, true) ?? [];
+            
             $files = request()->file('image');
-            foreach($files as $file)
-            {
-                $filename[] = $file->getClientOriginalName();
-                // $file->movKe('admin/bestServicesImage',$file->getClientOriginalName());
+            foreach($files as $file) {
+                // Add new image names to existing array
+                $existingImages[] =$file->getClientOriginalName();
+                $file->move('admin/bestServicesImage', $file->getClientOriginalName());
             }
-            dd($filename);
-            $filenames = json_encode($filename, JSON_UNESCAPED_UNICODE);
-            $bestservices->image = $filenames;
+
+            // Encode combined array back to JSON
+            $bestservices->image = json_encode($existingImages, JSON_UNESCAPED_UNICODE);
         }
+
+        $title = request()->input('title');
+        $content = request()->input('content');
+        $button = request()->input('button');
+        
+        $header = request()->input('header');
+        $header = json_encode($header, JSON_UNESCAPED_UNICODE);
+        $bestservices->header = $header;
+
+        $bestservices->title = $title;
+        $bestservices->content = $content;
+        $bestservices->button = $button;
+
+        $bestservices->save();
+
+        return redirect('dashboard/dynamic-edit/best-services')->with('update',"Best Service güncellendi");
+
     }
 
 
@@ -90,19 +106,28 @@ class BestServicesController extends Controller
         }
     }
 
-    public function delete()
+    public function delete($key)
     {
-
         $bestservices = BestServices::latest()->first();
-        $rows = json_decode($bestservices->rows, TRUE);
-        if (array_key_exists(request()->all()["header"], $rows)) {
-            unset($rows[request()->all()["header"]]);
-            // dd($rows);
+        $headers = json_decode($bestservices->header, TRUE);
+        $images = json_decode($bestservices->image, TRUE);
+        if ($headers[$key] && $images[$key]) {
+            $oldPath = public_path('admin/bestServicesImage/' . $images[$key]);
+            if (file_exists($oldPath)) {
+                unlink($oldPath);
+            }
+            unset($headers[$key]);
+            unset($images[$key]);
 
-            $rows = json_encode($rows, JSON_UNESCAPED_UNICODE);
-            $bestservices->rows = $rows;
+            $headers = json_encode($headers, JSON_UNESCAPED_UNICODE);
+            $bestservices->header = $headers;
+
+            $images = json_encode($images, JSON_UNESCAPED_UNICODE);
+            $bestservices->image = $images;
 
             $bestservices->save();
+
+            return redirect('dashboard/dynamic-edit/best-services')->with('delete',"silindi");
 
         } else {
             echo "Key does not exist!";

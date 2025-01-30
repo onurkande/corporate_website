@@ -1,113 +1,237 @@
 @extends('layouts.dynamic')
 @section('title','FEATURED PROJECT')
 @section('content')
+    @if(session()->has('store'))
+        <div class="alert alert-success" role="alert">
+            {{ session()->get('store') }}
+        </div>
+        <script>
+            setTimeout(function() {
+                $('.alert').fadeOut();
+            }, 5000);
+        </script>
+    @endif
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+    @if(session()->has('update'))
+        <div class="alert alert-info" role="alert">
+            {{ session()->get('update') }}
+        </div>
+        <script>
+            setTimeout(function() {
+                $('.alert').fadeOut();
+            }, 5000);
+        </script>
+    @endif
 
-                @if ($record)
-                    <form action="featuredProject-update" method="post" enctype="multipart/form-data">
-                        @csrf
+    @if(session()->has('delete'))
+        <div class="alert alert-danger" role="alert">
+            {{ session()->get('delete') }}
+        </div>
+        <script>
+            setTimeout(function() {
+                $('.alert').fadeOut();
+            }, 5000);
+        </script>
+    @endif
+    <div class="card">
+        <div class="card-header">
+            <h4>Featured Project</h4>
+        </div>
+        <div class="card-body">
 
-                        <label>title</label>
-                        <input type="text" name="title" value="{{$record->title}}">
-                        <br>
-                        <label>button</label>
-                        <input type="text" name="button" value="{{$record->button}}">
-                        <br>
-                        <br>
-
-                        @if($record->rows != null)
-
-                            @php
-                            $rows=json_decode($record->rows, TRUE);
-                            @endphp
-
-                            @foreach ($rows as $row)
-                            <div >
-                                <br>
-                                <br>
-                                <img style="width:250px" src="{{ asset('images/' . $row['image']) }}">
-                                <br>
-                                <input type="hidden" name="oldImage[]" value="{{$row['image']}}">
-                                <input type="file" name="image[]">
-                                <br>
-                                <input type="text" name="header[]" value="{{$row['header']}}">
-                                <input type="text" name="content[]" value="{{$row['content']}}">
-                                
-                                <a href="{{route('featuredProject-delete', ['header'=>$row['header']])}}"> sil </a>
-                            </div>
-                            @endforeach
-                            <hr>
-                            <section id="more-rows">
-                                
-                            </section>
-                            
-                        @else
-                            <label>image</label>
-                            <div style="display:grid; grid-template-columns:1fr 1fr 1fr;">
-                                <input type="file" name="image[]">
-                                <input type="text" name="header[]">
-                                <input type="text" name="content[]">
-                            </div>
-                            <hr>
-                            <section id="more-rows">
-                                
-                            </section>
-                        @endif
-                        <br>
-                        <br>
-                        <div>
-                            <a onclick="addRows()">+</a>
-                            <a onclick="removeRows()">-</a>
+            @if ($record)
+                <form method="post" action="{{url('dashboard/dynamic-edit/featuredProject-update/'.$record->id)}}" enctype="multipart/form-data">
+                    @csrf
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="">Title :</label>
+                            <input type="text" name="title" class="form-control" value="{{ $record->title }}">
                         </div>
-                        
-                        <input type="submit" value="güncelle">
-                    </form>
-                @else
-                    <form method="post" enctype="multipart/form-data">
-                        @csrf
-                        <label>title</label>
-                        <input type="text" name="title">
-                        <br>
-                        <label>header</label>
-                        <input type="text" name="header">
-                        <br>
-                        <label>content</label>
-                        <input type="text" name="content">
-                        <br>
-                        <label>button</label>
-                        <input type="text" name="button">
-                        <br>
-                        <label>image</label>
-                        <input type="file" name="image">
-                        <br>
-                        <input type="submit" value="kaydet">
-                        <section id="more-rows">
-                                
-                        </section>
-                    </form>
-                @endif
+                        <div class="col-md-4">
+                            <label for="">Button :</label>
+                            <input type="text" name="button" class="form-control" value="{{ $record->button }}">
+                        </div>
+                    </div>
                 
-            </div>
+                    <br>
+
+                    <div class="row">
+                        @php
+                            $headers = json_decode($record->headers, TRUE);
+                            $contents = json_decode($record->contents, TRUE);
+                            $images = json_decode($record->images, TRUE);
+                        @endphp
+
+                        <div class="col-md-4">
+                            <label for="">Header :</label>
+                            @if($headers)
+                                @foreach($headers as $key => $header)
+                                    <div class="row">
+                                        <div class="col-md-1">
+                                            <a href="{{ route('featuredProject-delete', $key) }}"><button class="btn-danger" type="button">Sil</button></a>
+                                        </div>
+                                        <div class="col-md-11">
+                                            <input type="text" name="header[]" class="form-control" value="{{ $header }}" oninput="checkInputRowsValues()" required>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @endif
+                            <section id="more-header">
+                            </section>
+                            <br>
+                            <div>
+                                <a onclick="addRows()"><button type="button">+</button></a>
+                                <a onclick="removeRows()"><button type="button">-</button></a>
+                            </div> 
+                        </div>
+                        <div class="col-md-4">
+                            <label for="">Content :</label>
+                            @if($contents)
+                                @foreach($contents as $key => $content)
+                                    <input type="text" name="content[]" class="form-control" value="{{ $content }}" oninput="checkInputRowsValues()" required>
+                                @endforeach
+                            @endif
+                            <section id="more-content">
+                            </section>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="">Image :</label>
+                            @if($images)
+                                @foreach($images as $image)
+                                    <input type="file" name="image[]" class="form-control" value="{{ $image }}" oninput="checkInputRowsValues()" required>
+                                @endforeach
+                            @endif
+                            <section id="more-image">
+                            </section>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class="row mt-3">
+                        <div class="col-md-8">
+                            <button type="submit" class="btn btn-primary btn-lg btn-block" style="display: block; width: 100%;">Submit</button>
+                        </div>
+                    </div>
+
+                </form>
+            @else
+                <form method="post" action="{{url('dashboard/dynamic-edit/featuredProject-insert')}}" enctype="multipart/form-data">
+                    @csrf
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="">Title :</label>
+                            <input type="text" name="title" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="">Button :</label>
+                            <input type="text" name="button" class="form-control">
+                        </div>
+                    </div>
+                
+                    <br>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="">Header :</label>
+                            <input type="text" name="header" class="form-control" oninput="checkInputRowsValues()">
+                            <section id="more-header">
+                            </section>
+                            <br>
+                            <div>
+                                <a onclick="addRows()"><button type="button">+</button></a>
+                                <a onclick="removeRows()"><button type="button">-</button></a>
+                            </div> 
+                        </div>
+                        <div class="col-md-4">
+                            <label for="">Content :</label>
+                            <input type="text" name="content" class="form-control" oninput="checkInputRowsValues()">
+                            <section id="more-content">
+                            </section>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="">Image :</label>
+                            <input type="file" name="image" class="form-control" oninput="checkInputRowsValues()">
+                            <section id="more-image">
+                            </section>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class="row mt-3">
+                        <div class="col-md-8">
+                            <button type="submit" class="btn btn-primary btn-lg btn-block" style="display: block; width: 100%;">Kaydet</button>
+                        </div>
+                    </div>
+
+                </form>
+            @endif
+
         </div>
     </div>
 
-    <script>
-        function addRows()
-        {
-            const moreRows = document.getElementById('more-rows');
-            const row = document.createElement("div");
-            row.innerHTML = '<div><input type="file" name="image[]" required><input type="text" name="header[]" required><input type="text" name="content[]" required></div>';
-            moreRows.appendChild(row);
+@endsection
+
+<script>
+    function addRows() 
+    {
+        const moreHeader = document.getElementById('more-header');
+        const moreContent = document.getElementById('more-content');
+        const moreImage = document.getElementById('more-image');
+
+        const headerRow = document.createElement("div");
+        headerRow.innerHTML = '<input type="text" class="form-control" name="header[]" oninput="checkInputRowsValues()" required>';
+        moreHeader.appendChild(headerRow);
+
+        const contentRow = document.createElement("div");
+        contentRow.innerHTML = '<input type="text" class="form-control" name="content[]" oninput="checkInputRowsValues()" required>';
+        moreContent.appendChild(contentRow);
+
+        const imageRow = document.createElement("div");
+        imageRow.innerHTML = '<input type="file" class="form-control" name="image[]" oninput="checkInputRowsValues()" required>';
+        moreImage.appendChild(imageRow);
+    }
+
+    function removeRows() 
+    {
+        const headerSection = document.getElementById("more-header");
+        const contentSection = document.getElementById("more-content");
+        const imageSection = document.getElementById("more-image");
+
+        if (headerSection.children.length > 0) {
+            headerSection.removeChild(headerSection.lastElementChild);
         }
 
-        function removeRows()
-        {
-            const rowsSection = document.getElementById("more-rows");
-            const lastRows = rowsSection.querySelector("div:last-child");
-            lastRows.parentElement.removeChild(lastRows);
+        if (contentSection.children.length > 0) {
+            contentSection.removeChild(contentSection.lastElementChild);
         }
-    </script>
-@endsection
+
+        if (imageSection.children.length > 0) {
+            imageSection.removeChild(imageSection.lastElementChild);
+        }
+    }
+
+    function checkInputRowsValues() 
+    {
+        const headerInputs = document.querySelectorAll('input[name="header[]"]');
+        const contentInputs = document.querySelectorAll('input[name="content[]"]');
+        const imageInputs = document.querySelectorAll('input[name="image[]"]');
+
+        headerInputs.forEach((headerInput, index) => {
+            const contentInput = contentInputs[index];
+            const imageInput = imageInputs[index];
+
+            if (headerInput.value !== '' && (contentInput.value === '' || imageInput.value === '')) {
+                contentInput.setCustomValidity('Please fill in the content');
+                imageInput.setCustomValidity('Please select an image');
+            } else if (headerInput.value === '' && (contentInput.value !== '' || imageInput.value !== '')) {
+                headerInput.setCustomValidity('Please fill in the header');
+            } else {
+                headerInput.setCustomValidity('');
+                contentInput.setCustomValidity('');
+                imageInput.setCustomValidity('');
+            }
+        });
+    }
+</script>

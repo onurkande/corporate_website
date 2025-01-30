@@ -16,7 +16,10 @@ return new class extends Migration
         Schema::create('featured_projects', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->json('rows')->nullable();
+            $table->json('headers')->nullable();
+            $table->json('contents')->nullable();
+            $table->json('images')->nullable();
+            $table->json('urls')->nullable();
             $table->string('button');
             $table->timestamps();
         });

@@ -9,53 +9,28 @@ class ServiceDetailController extends Controller
 {
     function index()
     {
-        $record = $this->hasRecord();
+        $record = ServiceDetail::first();
         return view('dynamic.service-detail',['record'=>$record]);
     }
 
-    function view()
+    function update(Request $request)
     {
-        $record = $this->hasRecord();
-        return view('service',['record'=>$record]);
+        $record = ServiceDetail::first();
+        if (!$record) {
+            $record = new ServiceDetail();
+        }
+
+        $record->title = $request->title;
+        $record->content = $request->content;
+        $record->save();
+
+        return redirect()->back()->with('store', 'Service Detail başarıyla güncellendi!');
     }
 
-    // function view()
-    // {
-    //     $record = $this->hasRecord();
-    //     return view('service', compact('record'));
-    // }
-
-    function store()
+    function delete()
     {
-        $title = request()->input('title');
-        $content = request()->input('content');
-
-        $ServiceDetail = new ServiceDetail;
-        $ServiceDetail->title = $title;
-        $ServiceDetail->content = $content;
-        $ServiceDetail->save();
-
-        return redirect('dashboard/dynamic-edit/service-detail');
-    }
-
-    function update()
-    {
-        $title = request()->input('title');
-        $content = request()->input('content');
-
-        $ServiceDetail = new ServiceDetail;
-        $ServiceDetail = $ServiceDetail::find(1);
-        $ServiceDetail->title = $title;
-        $ServiceDetail->content = $content;
-        $ServiceDetail->save();
-
-        return redirect('dashboard/dynamic-edit/service-detail');
-    }
-
-    function hasRecord()
-    {
-        $ServiceDetail = new ServiceDetail;
-        $ServiceDetail = ServiceDetail::find(1);
-        return $ServiceDetail ?? null;
+        $record = ServiceDetail::first();
+        $record->delete();
+        return redirect()->back()->with('delete', 'Service Detail başarıyla silindi!');
     }
 }

@@ -1,241 +1,326 @@
 @extends('layouts.dynamic')
-@section('footer','FOOTER')
+
 @section('content')
-    {{-- INFO --}}
-    @if($infoRecord)
-        <form action="InfoRows-update" method="post">
-            @csrf
-            <label>title1</label>
-            <input type="text" name="title1" value="{{$infoRecord->title1}}"><br>
-            @if($infoRecord->inforows != null)
-                @php
-                    $inforows=json_decode($infoRecord->inforows, TRUE);
-                @endphp
-                
-                @foreach($inforows as $inforow)
-                    <label>info</label>
-                    <input type="text" name="info[]" value="{{$inforow['info']}}">
-                    <a href="{{route('inforows-delete', ['info'=>$inforow['info']])}}"> sil </a><br>
-                @endforeach
-                <hr>
-                <section id="more-inforows">
-                </section>
-            @else
-                <label>info</label>
-                <input type="text" name="info[]"><br>
-                <hr>
-                <section id="more-inforows">
-                </section>
-            @endif
-            <div>
-                <a onclick="addinforows()">+</a>
-                <a onclick="removeinforows()">-</a>
+    @if(session()->has('success'))
+        <div class="alert alert-success" role="alert">
+            {{ session()->get('success') }}
+        </div>
+        <script>
+            setTimeout(function() {
+                $('.alert').fadeOut();
+            }, 5000);
+        </script>
+    @endif
+
+    @if(session()->has('delete'))
+        <div class="alert alert-danger" role="alert">
+            {{ session()->get('delete') }}
+        </div>
+        <script>
+            setTimeout(function() {
+                $('.alert').fadeOut();
+            }, 5000);
+        </script>
+    @endif
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Footer Ayarları</h4>
+                </div>
+                <div class="card-body">
+                    @if($record)
+                        <form action="{{ route('footerUpdate') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            @method('POST')
+
+                            <div class="form-group">
+                                <label>Logo</label>
+                                <input type="file" name="logo" class="form-control">
+                                @if($record->logo)
+                                    <img src="{{ asset('admin/footerImage/'.$record->logo) }}" width="100">
+                                @endif
+                            </div>
+
+                            <br>
+
+                            <div class="form-group">
+                                <label>Açıklama</label>
+                                <textarea name="description" class="form-control" required>{{ $record->description }}</textarea>
+                            </div>
+
+                            <br>
+
+                            <div class="form-group">
+                                <label>İletişim Öğeleri</label>
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <label>İletişim Öğesi:</label>
+                                        @if($record->contact_items)
+                                            @foreach($record->contact_items as $key => $item)
+                                                <div class="row">
+                                                    <div class="col-md-1">
+                                                        <a href="{{ route('footer-contact-delete', $key) }}"><button class="btn-danger" type="button">Sil</button></a>
+                                                    </div>
+                                                    <div class="col-md-11">
+                                                        <input type="text" name="contact_items[]" class="form-control" value="{{ $item }}" oninput="checkInputValues()" required>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        @endif
+                                        <section id="more-contact-items">
+                                        </section>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <label>İkon:</label>
+                                        @if($record->icons)
+                                            @foreach($record->icons as $icon)
+                                                <input type="text" name="icons[]" class="form-control" value="{{ $icon }}" oninput="checkInputValues()" required>
+                                            @endforeach
+                                        @endif
+                                        <section id="more-icons">
+                                        </section>
+                                    </div>
+                                </div>
+                                <br>
+                                <div>
+                                    <a onclick="addContactRows()"><button type="button">+</button></a>
+                                    <a onclick="removeContactRows()"><button type="button">-</button></a>
+                                </div>
+                            </div>
+
+                            <br>
+
+                            <div class="form-group">
+                                <label>Etiketler</label>
+                                <div class="col-md-10">
+                                    @if($record->tags)
+                                        @foreach($record->tags as $key => $tag)
+                                            <div class="row">
+                                                <div class="col-md-1">
+                                                    <a href="{{ route('footer-tag-delete', $key) }}"><button class="btn-danger" type="button">Sil</button></a>
+                                                </div>
+                                                <div class="col-md-11">
+                                                    <input type="text" name="tags[]" class="form-control" value="{{ $tag }}" required>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @endif
+                                    <section id="more-tags">
+                                    </section>
+                                    <br>
+                                    <div>
+                                        <a onclick="addTagRows()"><button type="button">+</button></a>
+                                        <a onclick="removeTagRows()"><button type="button">-</button></a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br>
+
+                            <div class="form-group">
+                                <label>Instagram Fotoğrafları</label>
+                                <div class="col-md-10">
+                                    @if($record->instagram_photos)
+                                        @foreach($record->instagram_photos as $key => $photo)
+                                            <div class="row mb-3">
+                                                <div class="col-md-1">
+                                                    <a href="{{ route('footer-photo-delete', $key) }}"><button class="btn-danger" type="button">Sil</button></a>
+                                                </div>
+                                                <div class="col-md-11">
+                                                    <img src="{{ asset('admin/footerImage/'.$photo) }}" width="100">
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @endif
+                                    <input type="file" name="instagram_photos[]" class="form-control">
+                                    <section id="more-photos">
+                                    </section>
+                                    <br>
+                                    <div>
+                                        <a onclick="addPhotoRows()"><button type="button">+</button></a>
+                                        <a onclick="removePhotoRows()"><button type="button">-</button></a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br>
+
+                            <div class="form-group">
+                                <label>Telif Hakkı Metni</label>
+                                <input type="text" name="copyright_text" class="form-control" value="{{ $record->copyright_text }}" required>
+                            </div>
+
+                            <br>
+
+                            <button type="submit" class="btn btn-primary">Güncelle</button>
+                        </form>
+                    @else
+                        <form action="{{ route('footerUpdate') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            @method('POST')
+
+                            <div class="form-group">
+                                <label>Logo</label>
+                                <input type="file" name="logo" class="form-control">
+                            </div>
+
+                            <br>
+
+                            <div class="form-group">
+                                <label>Açıklama</label>
+                                <textarea name="description" class="form-control" required></textarea>
+                            </div>
+
+                            <br>
+
+                            <div class="form-group">
+                                <label>İletişim Öğeleri</label>
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <label>İletişim Öğesi:</label>
+                                        <input type="text" name="contact_items[]" class="form-control" oninput="checkInputValues()" required>
+                                        <section id="more-contact-items">
+                                        </section>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <label>İkon:</label>
+                                        <input type="text" name="icons[]" class="form-control" oninput="checkInputValues()" required>
+                                        <section id="more-icons">
+                                        </section>
+                                    </div>
+                                </div>
+                                <br>
+                                <div>
+                                    <a onclick="addContactRows()"><button type="button">+</button></a>
+                                    <a onclick="removeContactRows()"><button type="button">-</button></a>
+                                </div>
+                            </div>
+
+                            <br>
+
+                            <div class="form-group">
+                                <label>Etiketler</label>
+                                <div class="col-md-10">
+                                    <input type="text" name="tags[]" class="form-control" required>
+                                    <section id="more-tags">
+                                    </section>
+                                    <br>
+                                    <div>
+                                        <a onclick="addTagRows()"><button type="button">+</button></a>
+                                        <a onclick="removeTagRows()"><button type="button">-</button></a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br>
+
+                            <div class="form-group">
+                                <label>Instagram Fotoğrafları</label>
+                                <div class="col-md-10">
+                                    <input type="file" name="instagram_photos[]" class="form-control">
+                                    <section id="more-photos">
+                                    </section>
+                                    <br>
+                                    <div>
+                                        <a onclick="addPhotoRows()"><button type="button">+</button></a>
+                                        <a onclick="removePhotoRows()"><button type="button">-</button></a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br>
+
+                            <div class="form-group">
+                                <label>Telif Hakkı Metni</label>
+                                <input type="text" name="copyright_text" class="form-control" required>
+                            </div>
+
+                            <br>
+
+                            <button type="submit" class="btn btn-primary">Kaydet</button>
+                        </form>
+                    @endif
+                </div>
             </div>
-            
-            <input type="submit" value="güncelle">
-        </form>
-    @else
-        <form action="InfoRows-store" method="post">
-            @csrf
-            <label>title1</label>
-            <input type="text" name="title1"><br>
-            <label>info</label>
-            <input type="text" name="info"><br>
-            <section id="more-inforows">
-            </section>
-            <input type="submit" value="kaydet">
-        </form>
-    @endif
+        </div>
+    </div>
+</div>
 
-    <br><br>
+<script>
+    function addContactRows() {
+        const moreContactItems = document.getElementById('more-contact-items');
+        const moreIcons = document.getElementById('more-icons');
 
-    @if ($tagRecord)
-        <form method="post">
-            @csrf
-            <label>title2</label>
-            <input type="text" name="title2"><br>
-        @if($infoRecord->inforows != null)
-                @php
-                    $inforows=json_decode($infoRecord->inforows, TRUE);
-                @endphp
-                
-                @foreach($inforows as $inforow)
-                @endforeach
-            <label>tag</label>
-            <input type="text" name="tag[]"><br>
-            <input type="submit" value="güncelle">
-        </form>
-    @else
-        <form method="post">
-            @csrf
-            <label>title2</label>
-            <input type="text" name="title2"><br>
-            <label>tag</label>
-            <input type="text" name="tag"><br>
-            <input type="submit" value="kaydet">
-        </form>
-    @endif
+        const contactRow = document.createElement("div");
+        contactRow.innerHTML = '<input type="text" class="form-control" name="contact_items[]" oninput="checkInputValues()" required>';
+        moreContactItems.appendChild(contactRow);
 
-            @if($tagsRecord->tagsrows != null)
-                @php
-                    $tagsrows=json_decode($tagsRecord->tagsrows, TRUE);
-                @endphp
-                
-                @foreach($tagsrows as $tagsrow)
-                    <label>tag</label>
-                    <input type="text" name="tag[]" value="{{$tagsrow['tag']}}">
-                    <a href="{{route('tagsrows-delete', ['tag'=>$tagsrow['tag']])}}"> sil </a><br>
-                @endforeach
-                <hr>
-                <section id="more-tagsrow">
-                </section>
-            @else
-                <label>tag</label>
-                <input type="text" name="tag[]"><br>
-                <hr>
-                <section id="more-tagsrow">
-                </section>
-            @endif
-            <div>
-                <a onclick="addtagsrow()">+</a>
-                <a onclick="removetagsrow()">-</a>
-            </div>
-            <input type="submit" value="güncelle">
-        </form>
-    @else
-        <form action="TagsRows-store" method="post">
-            @csrf
-            <label>title2</label>
-            <input type="text" name="title2"><br>
-            <label>tag</label>
-            <input type="text" name="tag"><br>
-            <input type="submit" value="kaydet">
-        </form>
-    @endif
+        const iconRow = document.createElement("div");
+        iconRow.innerHTML = '<input type="text" class="form-control" name="icons[]" oninput="checkInputValues()" required>';
+        moreIcons.appendChild(iconRow);
+    }
 
-    <br><br>
+    function removeContactRows() {
+        const contactItemsSection = document.getElementById("more-contact-items");
+        const iconsSection = document.getElementById("more-icons");
 
-    {{-- IMAGE --}}
-    @if($imageRecord)
-        <form method="post" action="ImageRows-update" enctype="multipart/form-data">
-            @csrf
-            <label>title3</label>
-            <input type="text" name="title3" value="{{$imageRecord->title3}}"><br>
-
-            @if($imageRecord->imagerows != null)
-                @php
-                    $imagerows=json_decode($imageRecord->imagerows, TRUE);
-                @endphp
-                
-                @foreach($imagerows as $imagerow)
-                    <br>
-                    <img src="{{ asset('/images/'. $imagerow['image']) }}" alt="Resim" width="200">
-                    <input type="hidden" name="oldImage[]" value="{{$imagerow['image']}}">
-                    <input type="file" name="image[]">
-                    <a href="/dashboard/dynamic-edit/ImageRows-delete/{{$imagerow['image']}}"> sil </a><br>
-                @endforeach
-                <hr>
-                <section id="more-imagerow">
-                </section>
-            @else
-                <label>image</label>
-                <input type="file" name="image[]"><br>
-                <section id="more-imagerow">
-                </section>
-            @endif
-            <div>
-                <a onclick="addimagerow()">+</a>
-                <a onclick="removeimagerow()">-</a>
-            </div>
-
-            <input type="submit" value="güncelle">
-        </form>
-    @else
-       <form action="ImageRows-store" method="post" enctype="multipart/form-data">
-            @csrf
-            <label>title3</label>
-            <input type="text" name="title3"><br>
-            <label>image</label>
-            <input type="file" name="image"><br>
-            <input type="submit" value="kaydet">
-        </form> 
-    @endif
-
-
-    <br><br>
-
-    {{-- TITLE4 --}}
-    @if($title4Record)
-        <form method="post" action="title4-update">
-            @csrf
-            <label>title4</label>
-            <input type="text" name="title4" value="{{$title4Record->title4}}"><br>
-            <input type="submit" value="güncelle">
-        </form>
-    @else
-        <form action="title4-store" method="post">
-            @csrf
-            <label>title4</label>
-            <input type="text" name="title4"><br>
-            <input type="submit" value="kaydet">
-        </form>
-    @endif
-    
-
-
-    {{-- ====== SCRİPT ====== --}}
-
-    {{-- info script --}}
-    <script>
-        function addinforows()
-        {
-            const moreinforows = document.getElementById('more-inforows');
-            const row = document.createElement("div");
-            row.innerHTML = '<div><input type="text" name="info[]" required></div>';
-            moreinforows.appendChild(row);
+        if (contactItemsSection.children.length > 0) {
+            contactItemsSection.removeChild(contactItemsSection.lastElementChild);
         }
 
-        function removeinforows()
-        {
-            const columnSection = document.getElementById("more-inforows");
-            const lastColumn = columnSection.querySelector("div:last-child");
-            lastColumn.parentElement.removeChild(lastColumn);
+        if (iconsSection.children.length > 0) {
+            iconsSection.removeChild(iconsSection.lastElementChild);
         }
-    </script>
+    }
 
-    {{-- tag script --}}
-    <script>
-        function addtagsrow()
-        {
-            const moretagsrow = document.getElementById('more-tagsrow');
-            const row = document.createElement("div");
-            row.innerHTML = '<div><input type="text" name="tag[]" required></div>';
-            moretagsrow.appendChild(row);
-        }
+    function addTagRows() {
+        const moreTags = document.getElementById('more-tags');
+        const tagRow = document.createElement("div");
+        tagRow.innerHTML = '<input type="text" class="form-control" name="tags[]" required>';
+        moreTags.appendChild(tagRow);
+    }
 
-        function removetagsrow()
-        {
-            const columnSection = document.getElementById("more-tagsrow");
-            const lastColumn = columnSection.querySelector("div:last-child");
-            lastColumn.parentElement.removeChild(lastColumn);
+    function removeTagRows() {
+        const tagsSection = document.getElementById("more-tags");
+        if (tagsSection.children.length > 0) {
+            tagsSection.removeChild(tagsSection.lastElementChild);
         }
-    </script>
+    }
 
-    {{-- image script --}}
-    <script>
-        function addimagerow()
-        {
-            const moreimagerow = document.getElementById('more-imagerow');
-            const row = document.createElement("div");
-            row.innerHTML = '<div><input type="file" name="image[]" required></div>';
-            moreimagerow.appendChild(row);
-        }
+    function addPhotoRows() {
+        const morePhotos = document.getElementById('more-photos');
+        const photoRow = document.createElement("div");
+        photoRow.innerHTML = '<input type="file" class="form-control" name="instagram_photos[]">';
+        morePhotos.appendChild(photoRow);
+    }
 
-        function removeimagerow()
-        {
-            const columnSection = document.getElementById("more-imagerow");
-            const lastColumn = columnSection.querySelector("div:last-child");
-            lastColumn.parentElement.removeChild(lastColumn);
+    function removePhotoRows() {
+        const photosSection = document.getElementById("more-photos");
+        if (photosSection.children.length > 0) {
+            photosSection.removeChild(photosSection.lastElementChild);
         }
-    </script>
+    }
+
+    function checkInputValues() {
+        const contactInputs = document.querySelectorAll('input[name="contact_items[]"]');
+        const iconInputs = document.querySelectorAll('input[name="icons[]"]');
+
+        contactInputs.forEach((contactInput, index) => {
+            const iconInput = iconInputs[index];
+
+            if (contactInput.value !== '' && iconInput.value === '') {
+                iconInput.setCustomValidity('Lütfen ikon alanını doldurun');
+            } else if (contactInput.value === '' && iconInput.value !== '') {
+                contactInput.setCustomValidity('Lütfen iletişim öğesi alanını doldurun');
+            } else {
+                contactInput.setCustomValidity('');
+                iconInput.setCustomValidity('');
+            }
+        });
+    }
+</script>
+
 @endsection

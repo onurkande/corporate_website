@@ -9,114 +9,45 @@ class OurServicesController extends Controller
 {
     function index()
     {
-        $record = $this->hasRecord();
-        return view('dynamic.our-services',['record'=>$record]);
+        $record = OurServices::first();
+        return view('dynamic.our-services',compact('record'));
+    }
+
+    function update(Request $request)
+    {
+        $record = OurServices::first();
+        if (!$record) {
+            $record = new OurServices();
+        }
+
+        $record->title = $request->title;
+        $record->content = $request->content;
+        $record->content_rows = json_encode($request->content_rows);
+        $record->save();
+
+        return redirect()->back()->with('store', 'Our Services başarıyla eklendi!');
+    }
+
+    function delete($index)
+    {
+        $record = OurServices::first();
+        $content_rows = json_decode($record->content_rows);
+        unset($content_rows[$index]);
+        $record->content_rows = json_encode($content_rows);
+        $record->save();
+        return redirect()->back()->with('delete', 'Our Services content rows başarıyla silindi!');
+    }
+
+    function allDelete()
+    {
+        $record = OurServices::first();
+        $record->delete();
+        return redirect()->back()->with('delete', 'Our Services başarıyla silindi!');
     }
 
     function view()
     {
-        $record = $this->hasRecord();
+        $record = OurServices::first();
         return $record;
-    }
-
-    function store()
-    {
-        $title=request()->input('title');
-        $content=request()->input('content');
-        $paragraph=request()->input('paragraph');
-
-        if($paragraph != null)
-        {
-            $rows=[
-                "$paragraph"=>[
-                    "paragraph" => $paragraph
-                ]
-            ];
-
-            $rows=json_encode($rows,JSON_UNESCAPED_UNICODE);
-        
-        }
-        else
-        {
-            $rows = null;
-        }
-
-        $ourservices = new OurServices;
-
-        $ourservices->title = $title;
-        $ourservices->content = $content;
-        $ourservices->rows = $rows;
- 
-        $ourservices->save();
-
-        return redirect('dashboard/dynamic-edit/our-services');
-    }
-
-    function update()
-    {
-        $title=request()->input('title');
-        $content=request()->input('content');
-        $paragraph=request()->input('paragraph');
-
-        $allRows = [$paragraph];
-        if($paragraph != null)
-        {
-            $rowsCount = count($paragraph);
-            $index = 0;
-            $rows = [];
-            while($index < $rowsCount){
-                $rows[$paragraph[$index]] = [
-                    "paragraph" => $paragraph[$index]
-                ];
-                $index++;
-            }
-            $rows=json_encode($rows,JSON_UNESCAPED_UNICODE);
-
-            $ourservices = new OurServices;
-            $ourservices = $ourservices::find(1);
-
-            $ourservices->title = $title;
-            $ourservices->content = $content;
-            $ourservices->rows = $rows;
-    
-            $ourservices->save();
-
-            return redirect('dashboard/dynamic-edit/our-services');
-        }
-        else
-        {
-            $rows = null;
-        }
-    }
-
-    function hasRecord()
-    {
-        $ourservices = new OurServices;
-        $ourservices = OurServices::find(1);
-        return $ourservices ?? null;
-    }
-
-    function delete()
-    {
-        $ourservices = new OurServices;
-        $ourservices = OurServices::find(1);
-        $rows=json_decode($ourservices->rows, TRUE);
-        if(array_key_exists(request()->all()["paragraph"],$rows))
-        {
-            unset($rows[request()->all()["paragraph"]]);
-            //dd($rows);
-
-            $rows=json_encode($rows,JSON_UNESCAPED_UNICODE);
-            $ourservices->rows = $rows;
-     
-            $ourservices->save();
-
-        }
-        else
-        {
-            echo "Key does not exist!";
-        }
-
-        return redirect('dashboard/dynamic-edit/our-services');
     }
 }

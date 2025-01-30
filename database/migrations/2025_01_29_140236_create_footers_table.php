@@ -15,13 +15,13 @@ return new class extends Migration
     {
         Schema::create('footers', function (Blueprint $table) {
             $table->id();
-            $table->string('title1')->nullable();
-            $table->string('title2')->nullable();
-            $table->string('title3')->nullable();
-            $table->string('title4')->nullable();
-            $table->json('inforows')->nullable();
-            $table->json('tagsrows')->nullable();
-            $table->json('imagerows')->nullable();
+            $table->string('logo')->nullable();
+            $table->text('description')->nullable();
+            $table->json('contact_items')->nullable();
+            $table->json('icons')->nullable();
+            $table->json('tags')->nullable();
+            $table->json('instagram_photos')->nullable();
+            $table->string('copyright_text')->nullable();
             $table->timestamps();
         });
     }
