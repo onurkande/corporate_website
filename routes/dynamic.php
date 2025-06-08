@@ -19,6 +19,7 @@
     use App\Http\Controllers\ServiceDetailController;
     use App\Http\Controllers\HeaderController;
     use App\Http\Controllers\SliderController;
+    use App\Http\Controllers\BlogController;
 
     Route::prefix('dashboard/dynamic-edit')->group(function () {
         Route::middleware(['auth','isAdmin'])->group(function () {
@@ -115,6 +116,10 @@
             Route::get('/footer-photo-delete/{index}',[FooterController::class, 'deletePhoto'])->name('footer-photo-delete');
 
             Route::resource('sliders', SliderController::class);
+
+            Route::get('/blogs', [BlogController::class, 'index'])->name('blogs');
+            Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
+            Route::post('/blog/{slug}/comment', [BlogController::class, 'storeComment'])->name('blog.comment');
 
         });
     });
